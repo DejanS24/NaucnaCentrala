@@ -4,6 +4,7 @@ import java.security.Key;
 import java.util.List;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.mail.internet.MimeMessage;
 import javax.xml.bind.DatatypeConverter;
 
 import org.camunda.bpm.engine.IdentityService;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -70,13 +72,24 @@ public class EmailService implements JavaDelegate {
                 .setSubject(gson.toJson(dto))
                 .signWith(signatureAlgorithm, signingKey);
       
-		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setTo(user.getEmail());
-		mail.setFrom(fromEmail);
-		mail.setSubject("Confirmation mail");
-		mail.setText("Hello, " + user.getName() + " thanks for singing up to our site, please click link to verify your email!"
-				+ "\nhttp://localhost:8070/guest/confirm/?token="+builder.compact());
-		javaMailSender.send(mail);
+//		SimpleMailMessage mail = new SimpleMailMessage();
+//		mail.setTo(user.getEmail());
+//		mail.setFrom(fromEmail);
+//		mail.setSubject("Confirmation mail");
+//		mail.setText("Hello, " + user.getName() + " thanks for singing up to our site, please click link to verify your email!"
+//				+ "\nhttp://localhost:8070/guest/confirm/?token="+builder.compact());
+//		javaMailSender.send(mail);
+		
+		String token = builder.compact();
+		System.out.println("http://localhost:8070/user/confirm/?token="+token);
+		
+		MimeMessage mail = javaMailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mail, true);
+        messageHelper.setTo("dejans1224@gmail.com");
+        messageHelper.setSubject("Confirmation mail");
+        mail.setText("Hello, " + user.getName() + " thanks for singing up to our site, please click link to verify your email!"
+				+ "\nhttp://localhost:8070/guest/confirm/"+token);
+        javaMailSender.send(mail);
 
 		System.out.println("Email poslat!");
 	}
