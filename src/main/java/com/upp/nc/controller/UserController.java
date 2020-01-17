@@ -128,7 +128,7 @@ public class UserController {
 	
 	@GetMapping(path = "/confirm/{token}")
 	public ResponseEntity<String> confirmMail(@PathVariable("token") String token){
-		
+		String response = userService.confirmUser(token);
 		return new ResponseEntity<String>("Confirmed.", HttpStatus.OK);
 	}
 	

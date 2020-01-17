@@ -45,7 +45,8 @@
           </camunda:formField>
           <camunda:formField id="username" label="Username" type="string" />
           <camunda:formField id="password" label="Password" type="string" />
-          <camunda:formField id="rewiever" label="Rewiever?" type="boolean" />
+          <camunda:formField id="email" label="Email" type="string" />
+          <camunda:formField id="reviewer" label="Reviewer" type="boolean" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_08v2l5k</bpmn:incoming>

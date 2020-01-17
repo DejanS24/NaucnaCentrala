@@ -51,6 +51,7 @@ public class UserService {
         user.setCity((String)userMap.get("grad_i_drzava"));
         user.setName((String)userMap.get("ime"));
         user.setSurname((String)userMap.get("prezime"));
+        user.setState("Active");
         userRepository.save(user);
 //		try {
 //			this.sendMail(user, dto);
@@ -87,5 +88,10 @@ public class UserService {
 
 	public User findUserByUsername(String username) {
 		return userRepository.findByUsername(username);
+	}
+
+	public String confirmUser(String token) {
+//		User u = 
+		return null;
 	}
 }

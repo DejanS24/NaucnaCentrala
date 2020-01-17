@@ -95,4 +95,15 @@ public class MagazineController {
 		
 	}
 	
+	@GetMapping(path = "/dataValid/{taskId}", produces = "application/json")
+    public @ResponseBody FormFieldsDto dataValid(@PathVariable("taskId") String taskId) {
+		//provera da li korisnik sa id-jem pera postoji
+		//List<User> users = identityService.createUserQuery().userId("pera").list();
+		Task task = taskService.createTaskQuery().processInstanceId(taskId).list().get(0);
+
+		TaskFormData tfd = formService.getTaskFormData(task.getId());
+		List<FormField> properties = tfd.getFormFields();
+        return new FormFieldsDto(task.getId(), taskId, properties);
+    }
+	
 }

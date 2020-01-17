@@ -83,13 +83,13 @@ public class EmailService implements JavaDelegate {
 		String token = builder.compact();
 		System.out.println("http://localhost:8070/user/confirm/?token="+token);
 		
-		MimeMessage mail = javaMailSender.createMimeMessage();
-        MimeMessageHelper messageHelper = new MimeMessageHelper(mail, true);
-        messageHelper.setTo("dejans1224@gmail.com");
-        messageHelper.setSubject("Confirmation mail");
-        mail.setText("Hello, " + user.getName() + " thanks for singing up to our site, please click link to verify your email!"
-				+ "\nhttp://localhost:8070/guest/confirm/"+token);
-        javaMailSender.send(mail);
+//		MimeMessage mail = javaMailSender.createMimeMessage();
+//        MimeMessageHelper messageHelper = new MimeMessageHelper(mail, true);
+//        messageHelper.setTo("dejans1224@gmail.com");
+//        messageHelper.setSubject("Confirmation mail");
+//        mail.setText("Hello, " + user.getName() + " thanks for singing up to our site, please click link to verify your email!"
+//				+ "\nhttp://localhost:8070/guest/confirm/"+token);
+//        javaMailSender.send(mail);
 
 		System.out.println("Email poslat!");
 	}
