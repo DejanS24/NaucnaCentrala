@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_02o9dbp" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.4.1">
+  <bpmn:collaboration id="Collaboration_0kuwfl4">
+    <bpmn:participant id="Participant_1icrrvb" name="Magazine creation" processRef="Magazine_creation" />
+  </bpmn:collaboration>
+  <bpmn:process id="Magazine_creation" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_00ighwn">
+      <bpmn:lane id="Lane_1xgv0es" name="Administrator">
+        <bpmn:flowNodeRef>check_data</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1tvwlu2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>activate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>data_valid</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_0i7xoil" name="Editor">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>magazine_create</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>set_inactive</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>editors_and_reviewers</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>fix_data</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_1" name="Open magazine creation form" camunda:initiator="pokretac">
+      <bpmn:outgoing>SequenceFlow_1utx4j7</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="magazine_create" name="Fill magazine creation form" camunda:assignee="${pokretac}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="naziv" label="Naziv" type="string" />
+          <camunda:formField id="naucne_oblasti" label="Naucne oblasti" type="enum">
+            <camunda:value id="fizika" name="Fizika" />
+            <camunda:value id="psihologija" name="Psihologija" />
+            <camunda:value id="hemija" name="Hemija" />
+          </camunda:formField>
+          <camunda:formField id="nacin_placanja" label="Nacin placanja" type="enum">
+            <camunda:value id="kes" name="Kes" />
+            <camunda:value id="kartica" name="Kartica" />
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1utx4j7</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1iqbtu1</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_0r908g2">
+        <bpmn:targetRef>DataObjectReference_14xrpe8</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="set_inactive" name="Set magazine to inactive" camunda:expression="true" camunda:resultVariable="true">
+      <bpmn:incoming>SequenceFlow_1iqbtu1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_01dttz6</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_1xbw90b">
+        <bpmn:targetRef>datastore_magazine</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:serviceTask>
+    <bpmn:dataStoreReference id="datastore_magazine" name="Save magazine" />
+    <bpmn:dataObjectReference id="DataObjectReference_14xrpe8" name="Magazine" dataObjectRef="DataObject_0rf6a3i">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="active" value="false" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="DataObject_0rf6a3i" />
+    <bpmn:userTask id="check_data" name="Check magazine data" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="valid" label="Valid?" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1ozhzhj</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_07k4wt0</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="editors_and_reviewers" name="Setting editors and rewievers" camunda:assignee="${pokretac}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="editors" label="Editors" type="enum">
+            <camunda:value id="editor1" name="Editor 1" />
+            <camunda:value id="editor2" name="Editor 2" />
+          </camunda:formField>
+          <camunda:formField id="reveiwers" label="Rewievers" type="enum">
+            <camunda:value id="rewiever1" name="Rewiever 1" />
+            <camunda:value id="rewiever2" name="Rewiever 2" />
+            <camunda:value id="rewiever3" name="Rewiever 3" />
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_01dttz6</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1ozhzhj</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_1tvwlu2" name="Magazine activated">
+      <bpmn:incoming>SequenceFlow_023ykug</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="activate" name="Activate magazine" camunda:expression="#(magazine:active) = true" camunda:resultVariable="true">
+      <bpmn:incoming>SequenceFlow_025s70p</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1q43nl8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_023ykug</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_0zx8ygt">
+        <bpmn:targetRef>update_magazine</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="fix_data" name="Fill invalid/missing magazine data" camunda:assignee="${pokretac}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="naziv" label="Naziv" type="string" />
+          <camunda:formField id="naucne_oblasti" label="Naucne oblasti" type="enum">
+            <camunda:value id="fizika" name="Fizika" />
+            <camunda:value id="psihologija" name="Psihologija" />
+            <camunda:value id="hemija" name="Hemija" />
+          </camunda:formField>
+          <camunda:formField id="nacin_placanja" label="Nacin placanja" type="enum">
+            <camunda:value id="kes" name="Kes" />
+            <camunda:value id="kartica" name="Kartica" />
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_16e57a9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_025s70p</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_023ykug" sourceRef="activate" targetRef="EndEvent_1tvwlu2" />
+    <bpmn:sequenceFlow id="SequenceFlow_1ozhzhj" sourceRef="editors_and_reviewers" targetRef="check_data" />
+    <bpmn:sequenceFlow id="SequenceFlow_01dttz6" sourceRef="set_inactive" targetRef="editors_and_reviewers" />
+    <bpmn:sequenceFlow id="SequenceFlow_1iqbtu1" sourceRef="magazine_create" targetRef="set_inactive" />
+    <bpmn:sequenceFlow id="SequenceFlow_1utx4j7" sourceRef="StartEvent_1" targetRef="magazine_create" />
+    <bpmn:sequenceFlow id="SequenceFlow_025s70p" sourceRef="fix_data" targetRef="activate" />
+    <bpmn:exclusiveGateway id="data_valid" name="Data valid?">
+      <bpmn:incoming>SequenceFlow_07k4wt0</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1q43nl8</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_16e57a9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1q43nl8" name="Yes" sourceRef="data_valid" targetRef="activate">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{valid}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_16e57a9" name="No" sourceRef="data_valid" targetRef="fix_data">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{not valid}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_07k4wt0" sourceRef="check_data" targetRef="data_valid" />
+    <bpmn:dataStoreReference id="update_magazine" name="Save updated magazine" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0kuwfl4">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="253" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="233" y="265" width="78" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_13ohqy4_di" bpmnElement="magazine_create">
+        <dc:Bounds x="341" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1utx4j7_di" bpmnElement="SequenceFlow_1utx4j7">
+        <di:waypoint x="289" y="240" />
+        <di:waypoint x="341" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="DataObjectReference_14xrpe8_di" bpmnElement="DataObjectReference_14xrpe8">
+        <dc:Bounds x="443" y="115" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="437" y="172" width="48" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_0r908g2_di" bpmnElement="DataOutputAssociation_0r908g2">
+        <di:waypoint x="391" y="200" />
+        <di:waypoint x="441" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0rogwj8_di" bpmnElement="set_inactive">
+        <dc:Bounds x="491" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1iqbtu1_di" bpmnElement="SequenceFlow_1iqbtu1">
+        <di:waypoint x="441" y="240" />
+        <di:waypoint x="491" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="DataStoreReference_0l0qgiz_di" bpmnElement="datastore_magazine">
+        <dc:Bounds x="656" y="125" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="643" y="182" width="77" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_1xbw90b_di" bpmnElement="DataOutputAssociation_1xbw90b">
+        <di:waypoint x="591" y="209" />
+        <di:waypoint x="656" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_1icrrvb_di" bpmnElement="Participant_1icrrvb" isHorizontal="true">
+        <dc:Bounds x="140" y="95" width="1249" height="575" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0i7xoil_di" bpmnElement="Lane_0i7xoil" isHorizontal="true">
+        <dc:Bounds x="170" y="95" width="1219" height="290" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1xgv0es_di" bpmnElement="Lane_1xgv0es" isHorizontal="true">
+        <dc:Bounds x="170" y="385" width="1219" height="285" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_01dttz6_di" bpmnElement="SequenceFlow_01dttz6">
+        <di:waypoint x="591" y="240" />
+        <di:waypoint x="701" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1n3id2i_di" bpmnElement="check_data">
+        <dc:Bounds x="801" y="470" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0aept5i_di" bpmnElement="editors_and_reviewers">
+        <dc:Bounds x="701" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ozhzhj_di" bpmnElement="SequenceFlow_1ozhzhj">
+        <di:waypoint x="751" y="280" />
+        <di:waypoint x="751" y="350" />
+        <di:waypoint x="821" y="350" />
+        <di:waypoint x="821" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1tvwlu2_di" bpmnElement="EndEvent_1tvwlu2">
+        <dc:Bounds x="1253" y="492" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1247" y="535" width="48" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_023ykug_di" bpmnElement="SequenceFlow_023ykug">
+        <di:waypoint x="1171" y="510" />
+        <di:waypoint x="1253" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1dfw7l7_di" bpmnElement="activate">
+        <dc:Bounds x="1071" y="470" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1wvxgsj_di" bpmnElement="fix_data">
+        <dc:Bounds x="901" y="220" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_025s70p_di" bpmnElement="SequenceFlow_025s70p">
+        <di:waypoint x="1001" y="240" />
+        <di:waypoint x="1121" y="240" />
+        <di:waypoint x="1121" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1xrbfce_di" bpmnElement="data_valid" isMarkerVisible="true">
+        <dc:Bounds x="926" y="485" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="923" y="542" width="56" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1q43nl8_di" bpmnElement="SequenceFlow_1q43nl8">
+        <di:waypoint x="976" y="510" />
+        <di:waypoint x="1071" y="510" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1016" y="492" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_16e57a9_di" bpmnElement="SequenceFlow_16e57a9">
+        <di:waypoint x="951" y="485" />
+        <di:waypoint x="951" y="300" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="959" y="440" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_07k4wt0_di" bpmnElement="SequenceFlow_07k4wt0">
+        <di:waypoint x="901" y="510" />
+        <di:waypoint x="926" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="DataStoreReference_183r7o5_di" bpmnElement="update_magazine">
+        <dc:Bounds x="1135" y="585" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1126" y="642" width="69" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_0zx8ygt_di" bpmnElement="DataOutputAssociation_0zx8ygt">
+        <di:waypoint x="1135" y="550" />
+        <di:waypoint x="1148" y="585" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
