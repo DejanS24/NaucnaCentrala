@@ -43,6 +43,9 @@ public class UserService {
 		User user = new User();
         UserDTO dto = new UserDTO();
         
+        System.out.println(userMap);
+        System.out.println(userMap.get("ime"));
+        
         dto.setUsername((String)userMap.get("username"));
         dto.setPassword((String)userMap.get("password"));
         user.setUsername((String)userMap.get("username"));
@@ -82,7 +85,7 @@ public class UserService {
 		mail.setText("Hello, " + user.getName() + " thanks for singing up to our site, please click link to verify your email!"
 				+ "\nhttp://localhost:8070/guest/confirm/?token="+builder.compact());
 		javaMailSender.send(mail);
-
+		
 		System.out.println("Email poslat!");
 	}
 
@@ -91,7 +94,11 @@ public class UserService {
 	}
 
 	public String confirmUser(String token) {
-//		User u = 
-		return null;
+		User u = userRepository.findByToken(token);
+		if (u != null) {
+			return "Confirmed";
+		}else {
+			return null;			
+		}
 	}
 }

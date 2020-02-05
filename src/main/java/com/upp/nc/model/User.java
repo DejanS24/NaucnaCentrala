@@ -37,11 +37,14 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 
-	@Column(nullable = false)
+	@Column
 	private String city;
 
-	@Column(nullable = false)
+	@Column
 	private String state;
+
+	@Column
+	private String token;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<ScientificField> scientificFields;
@@ -116,6 +119,14 @@ public class User {
 
 	public void setScientificFields(List<ScientificField> scientificFields) {
 		this.scientificFields = scientificFields;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	public String getUserAuthorities() {
