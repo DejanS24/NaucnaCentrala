@@ -15,9 +15,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -39,7 +41,11 @@ public class Magazine {
     @JsonBackReference
     private Collection<ScientificWork> scientificWorks;
 	
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@NotNull
+	@ElementCollection(targetClass = ScientificField.class)
+	@CollectionTable(name = "magazine_scientificField", joinColumns = @JoinColumn(name = "magazine_id"))
+	@Enumerated(EnumType.STRING)
+	@Column(name = "scientificField_id")
     private List<ScientificField> scientificFields;
 
     @Column(nullable = false)

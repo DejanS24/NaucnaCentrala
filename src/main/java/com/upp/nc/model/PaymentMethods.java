@@ -4,13 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum ScientificField {
-    TECHNICAL_SCIENCES, MEDICINE, ART;
+public enum PaymentMethods {
+	SUBSCRIPTION, OPEN_ACCESS;
 	
 	public static List<String> getFields(){
-		return Stream.of(ScientificField.values())
-                .map(ScientificField::name)
+		return Stream.of(PaymentMethods.values())
+                .map(PaymentMethods::name)
                 .collect(Collectors.toList());
 	}
-
 }

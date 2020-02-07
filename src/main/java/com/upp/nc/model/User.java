@@ -1,19 +1,19 @@
 package com.upp.nc.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-
-import org.springframework.security.core.GrantedAuthority;
+import javax.persistence.JoinColumn;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class User {
@@ -46,7 +46,11 @@ public class User {
 	@Column
 	private String token;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//	@NotNull
+	@ElementCollection(targetClass = ScientificField.class)
+	@CollectionTable(name = "user_scientificField", joinColumns = @JoinColumn(name = "user_id"))
+	@Enumerated(EnumType.STRING)
+	@Column(name = "scientificField_id")
 	private List<ScientificField> scientificFields;
 
 	public Long getId() {
@@ -133,4 +137,24 @@ public class User {
 		return "Author";
 	}
 
+	public User(String name, String surname, String email, String username, String password, String city, String state,
+			String token, List<ScientificField> scientificFields) {
+		super();
+		this.name = name;
+		this.surname = surname;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		this.city = city;
+		this.state = state;
+		this.token = token;
+		this.scientificFields = scientificFields;
+	}
+
+	public User() {
+		super();
+		this.scientificFields = new ArrayList<ScientificField>();
+	}
+
+	
 }

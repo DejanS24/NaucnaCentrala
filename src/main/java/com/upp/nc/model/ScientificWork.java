@@ -1,8 +1,12 @@
 package com.upp.nc.model;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,7 +36,8 @@ public class ScientificWork {
     @Column(nullable = false)
     private String workAbstract;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@Enumerated(EnumType.STRING)
+	@Column
     private ScientificField scientificField;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

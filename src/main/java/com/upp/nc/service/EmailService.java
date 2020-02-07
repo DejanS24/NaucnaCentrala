@@ -88,12 +88,12 @@ public class EmailService implements JavaDelegate {
 		mail.setFrom("support@naucnacentrala.com");
 		mail.setSubject("Confirmation mail");
 		mail.setText("Hello, " + user.getName() + " thanks for singing up to our site, please click link to verify your email!"
-				+ "\nhttp://localhost:8070/guest/confirm/?token="+builder.compact());
+				+ "\nhttp://localhost:8070/user/confirm/"+builder.compact());
 		
 		mailSender.send(mail);
 		
 		String token = builder.compact();
-		System.out.println("http://localhost:8070/user/confirm/?token="+token);
+		System.out.println("http://localhost:8070/user/confirm/"+token);
 		
 //		MimeMessage mail = javaMailSender.createMimeMessage();
 //        MimeMessageHelper messageHelper = new MimeMessageHelper(mail, true);
