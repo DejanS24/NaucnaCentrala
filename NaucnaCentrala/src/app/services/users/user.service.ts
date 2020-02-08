@@ -13,7 +13,7 @@ export class UserService {
 
   constructor(private httpClient: HttpClient) { }
 
-  fetchUsers() {
+  fetchRegistrationForm() {
     return this.httpClient.get("http://localhost:8070/user/getRegForm") as Observable<any>;
   }
 

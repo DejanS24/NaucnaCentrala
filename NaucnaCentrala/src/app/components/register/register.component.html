@@ -1,22 +1,27 @@
-<div class="container">
+<div class="container" style="text-align: center;">
     <div class="row">
         <div class="offset-3"></div>
         <div class="col-md-6">
 <form #f="ngForm" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate>
-
+  <table>
   <div *ngFor="let field of formFields" >
-      <label for={{field.id}}>{{field.label}} </label>
-      <div class="form-group">
-      <input type="text" name={{field.id}} ngModel  *ngIf="field.type.name=='string'" >
-      <input type="checkbox" name={{field.id}} ngModel  *ngIf="field.type.name=='boolean'">
-      <input type="number" name={{field.id}} ngModel  *ngIf="field.type.name=='long'">
-      <select name="field.id" *ngIf="field.type.name=='enum'">
-        <option *ngFor="let val of enumValues" value={{val}}>
-          {{field.type.values[val]}}
-        </option>
-      </select>
-      </div>
+      <tr>
+        <td><label for={{field.id}}>{{field.label}} </label></td>
+        <td>
+        <div class="form-group">
+          <input type="text" name={{field.id}} ngModel  *ngIf="field.type.name=='string'" >
+          <input type="checkbox" name={{field.id}} ngModel  *ngIf="field.type.name=='boolean'">
+          <input type="number" name={{field.id}} ngModel  *ngIf="field.type.name=='long'">
+          <select name="field.id" *ngIf="field.type.name=='enum'">
+            <option *ngFor="let val of enumValues" value={{val}}>
+              {{field.type.values[val]}}
+            </option>
+          </select>
+        </div>
+        </td>
+      </tr>
   </div>
+  </table>
     <div>
         <label>Sva polja osim polja titule su obavezna! </label>
 
@@ -34,6 +39,6 @@
 
 <!--</table>-->
 </div>
-        <div class="offset-3"></div>
+    <div class="offset-3"></div>
     </div>
 </div>

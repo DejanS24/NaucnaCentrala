@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {UserService} from '../services/users/user.service';
-import {RepositoryService} from '../services/repository/repository.service';
+import { Component, OnInit, Inject } from '@angular/core';
+import {UserService} from 'src/app/services/users/user.service';
+import { RepositoryService } from 'src/app/services/repository/repository.service';
 
 @Component({
   selector: 'app-registration',
@@ -19,6 +19,7 @@ export class RegistrationComponent implements OnInit {
   private tasks = [];
 
   constructor(private userService : UserService, private repositoryService : RepositoryService) {
+  // constructor(private userService : UserService, private repositoryService : RepositoryService) {
     
     let x = repositoryService.startProcess();
 

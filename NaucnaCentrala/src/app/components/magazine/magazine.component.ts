@@ -1,17 +1,16 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, OnInit, Injectable, Inject } from '@angular/core';
+import { MagazineService } from 'src/app/services/magazine.service';
 import {Router} from '@angular/router';
-import { UserService } from 'src/app/services/users/user.service';
 import { ProcessService } from 'src/app/services/process.service';
 
 
 @Component({
-  selector: 'app-registration',
-  templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.css']
+  selector: 'app-magazine',
+  templateUrl: './magazine.component.html',
+  styleUrls: ['./magazine.component.css']
 })
-export class RegisterComponent implements OnInit {
-
-    private formFieldsDto = null;
+export class MagazineComponent implements OnInit {
+  private formFieldsDto = null;
     private formFields = [];
     private processInstanceId = '';
     private enumValues = [];
@@ -20,9 +19,10 @@ export class RegisterComponent implements OnInit {
     taskId = '';
 
 
-  constructor(private userService: UserService, private processService: ProcessService, private router: Router) {
+  constructor(private magazineService: MagazineService, private processService: ProcessService, private router: Router) {
+  // constructor(private magazineService: MagazineService, private processService: ProcessService, private router: Router) {
 
-    const x = userService.fetchRegistrationForm();
+    const x = processService.startProcess();
 
     x.subscribe(
       res => {
@@ -60,14 +60,14 @@ export class RegisterComponent implements OnInit {
     }
 
     // console.log(o);
-    const x = this.userService.registerUser(o, this.formFieldsDto.taskId);
+    const x = this.magazineService.createMagazine(o, this.formFieldsDto.taskId);
 
     x.subscribe(
       res => {
         // console.log(res);
 
         alert('You registered successfully!');
-        this.router.navigate(['']);
+        this.router.navigate(['/task',  this.processInstanceId]);
       },
       err => {
         console.log('Error occured');
