@@ -123,5 +123,40 @@ public class ScientificWorkController {
 		return new ResponseEntity<String>("Success", HttpStatus.OK);
 		
 	}
+	
+	public @ResponseBody FormFieldsDto workRelevantForm(@PathVariable("instanceId") String instanceId) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth!=null){
+            identityService.setAuthenticatedUserId(auth.getName());
+        }
+        
+		Task task = taskService.createTaskQuery().processInstanceId(instanceId).list().get(0);
 
+		System.out.println(task.getAssignee());
+		TaskFormData tfd = formService.getTaskFormData(task.getId());
+		List<FormField> properties = tfd.getFormFields();	
+        return new FormFieldsDto(task.getId(), instanceId, properties);
+		
+	}
+
+	public @ResponseBody FormFieldsDto workPdfForm(@PathVariable("instanceId") String instanceId) {
+		Task task = taskService.createTaskQuery().processInstanceId(instanceId).list().get(0);
+		TaskFormData tfd = formService.getTaskFormData(task.getId());
+		List<FormField> properties = tfd.getFormFields();	
+        return new FormFieldsDto(task.getId(), instanceId, properties);
+	}
+
+	public @ResponseBody FormFieldsDto workRejectForm(@PathVariable("instanceId") String instanceId) {
+		Task task = taskService.createTaskQuery().processInstanceId(instanceId).list().get(0);
+		TaskFormData tfd = formService.getTaskFormData(task.getId());
+		List<FormField> properties = tfd.getFormFields();	
+        return new FormFieldsDto(task.getId(), instanceId, properties);
+	}
+	
+	public @ResponseBody FormFieldsDto chooseReviewersForm(@PathVariable("instanceId") String instanceId) {
+		Task task = taskService.createTaskQuery().processInstanceId(instanceId).list().get(0);
+		TaskFormData tfd = formService.getTaskFormData(task.getId());
+		List<FormField> properties = tfd.getFormFields();	
+        return new FormFieldsDto(task.getId(), instanceId, properties);
+	}
 }

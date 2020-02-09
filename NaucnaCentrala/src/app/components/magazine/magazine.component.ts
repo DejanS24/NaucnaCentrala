@@ -16,13 +16,14 @@ export class MagazineComponent implements OnInit {
     private enumValues = [];
     private tasks = [];
     private nextTask = '';
+    private selectedFields = [];
     taskId = '';
 
 
   constructor(private magazineService: MagazineService, private processService: ProcessService, private router: Router) {
   // constructor(private magazineService: MagazineService, private processService: ProcessService, private router: Router) {
 
-    const x = processService.startProcess();
+    const x = magazineService.getMagazineForm();
 
     x.subscribe(
       res => {
@@ -49,6 +50,14 @@ export class MagazineComponent implements OnInit {
 
 
   ngOnInit() {
+  }
+
+  getEnumValues(values){
+    let vals = [];
+    for (let i in values){
+      vals.push(i);
+    }
+    return vals;
   }
 
   onSubmit(value, form) {

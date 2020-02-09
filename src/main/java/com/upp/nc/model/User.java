@@ -156,5 +156,9 @@ public class User {
 		this.scientificFields = new ArrayList<ScientificField>();
 	}
 
+	public User(User u) {
+		this(u.getName(), u.getSurname(), u.getEmail(), u.getUsername(), u.getPassword(), u.getCity(), u.getState(), u.getToken(), u.getScientificFields());
+	}
+
 	
 }

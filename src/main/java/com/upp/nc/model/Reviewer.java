@@ -20,6 +20,10 @@ public class Reviewer extends User {
 	@OneToMany
 	private Collection<ScientificWork> scientificWorks;
 
+	public Reviewer(User u) {
+		super(u);
+	}
+
 	public Collection<Magazine> getMagazines() {
 		return magazines;
 	}

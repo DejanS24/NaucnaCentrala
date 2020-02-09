@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.delegate.DelegateTask;
+import org.camunda.bpm.engine.delegate.TaskListener;
 import org.camunda.bpm.engine.form.FormField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import com.upp.nc.repository.UserRepository;
 import com.upp.nc.util.FormFieldsEnumLoader;
 
 @Service
-public class EditorsAndReviewersEnumHandler {
+public class EditorsAndReviewersEnumHandler implements TaskListener {
 	@Autowired
 	FormService formService;
 

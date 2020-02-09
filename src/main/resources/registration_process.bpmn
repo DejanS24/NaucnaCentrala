@@ -10,10 +10,9 @@
         <bpmn:flowNodeRef>UserTask_01reaqv</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_1ybyal0</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_0enso1a</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_12m28pa</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_04eiu8n</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>IntermediateThrowEvent_1b0r7e1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_0dnu33j</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_12m28pa</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_1pzqvoj" name="Administrator">
         <bpmn:flowNodeRef>ExclusiveGateway_1hr0nfy</bpmn:flowNodeRef>
@@ -77,15 +76,10 @@
       <bpmn:incoming>SequenceFlow_12gm323</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0qmics7</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="Task_12m28pa" name="Data check" camunda:expression="true" camunda:resultVariable="true">
-      <bpmn:incoming>SequenceFlow_1gq94mz</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_007215b</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_08v2l5k" sourceRef="StartEvent_06dh501" targetRef="UserTask_01reaqv" />
     <bpmn:sequenceFlow id="SequenceFlow_1gq94mz" sourceRef="UserTask_01reaqv" targetRef="Task_12m28pa" />
     <bpmn:sequenceFlow id="SequenceFlow_007215b" sourceRef="Task_12m28pa" targetRef="Task_0dnu33j" />
-    <bpmn:sequenceFlow id="SequenceFlow_0twwyws" sourceRef="Task_0dnu33j" targetRef="IntermediateThrowEvent_1b0r7e1" />
-    <bpmn:sequenceFlow id="SequenceFlow_0akeaz2" sourceRef="IntermediateThrowEvent_1b0r7e1" targetRef="ExclusiveGateway_1ybyal0" />
+    <bpmn:sequenceFlow id="SequenceFlow_0twwyws" sourceRef="Task_0dnu33j" targetRef="ExclusiveGateway_1ybyal0" />
     <bpmn:sequenceFlow id="SequenceFlow_12gm323" name="No" sourceRef="ExclusiveGateway_1ybyal0" targetRef="Task_0cq36u0">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{rewiever}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -110,24 +104,15 @@
         <bpmn:targetRef>DataStoreReference_1vvxumw</bpmn:targetRef>
       </bpmn:dataOutputAssociation>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Task_0od0g4e" name="Change user type to rewiever" camunda:expression="#(user:rewiever) = true" camunda:resultVariable="true">
+    <bpmn:serviceTask id="Task_0od0g4e" name="Change user type to rewiever" camunda:class="com.upp.nc.service.NewUserTypeService">
       <bpmn:incoming>SequenceFlow_1h6i7f8</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1bmm7bd</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_1ybyal0" name="Regular user?">
-      <bpmn:incoming>SequenceFlow_0akeaz2</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0twwyws</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_12gm323</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_12hca35</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:intermediateCatchEvent id="IntermediateThrowEvent_1b0r7e1" name="Receive confirmation email">
-      <bpmn:incoming>SequenceFlow_0twwyws</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0akeaz2</bpmn:outgoing>
-      <bpmn:messageEventDefinition messageRef="Message_1qbmvx6" />
-    </bpmn:intermediateCatchEvent>
-    <bpmn:sendTask id="Task_0dnu33j" name="Send confirmation email" camunda:class="com.upp.nc.service.EmailService">
-      <bpmn:incoming>SequenceFlow_007215b</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0twwyws</bpmn:outgoing>
-    </bpmn:sendTask>
     <bpmn:dataObjectReference id="user" name="New user" dataObjectRef="DataObject_17ohgbp">
       <bpmn:extensionElements>
         <camunda:properties>
@@ -136,6 +121,14 @@
       </bpmn:extensionElements>
     </bpmn:dataObjectReference>
     <bpmn:dataObject id="DataObject_17ohgbp" />
+    <bpmn:serviceTask id="Task_0dnu33j" name="Send confirmation email" camunda:class="com.upp.nc.service.EmailService">
+      <bpmn:incoming>SequenceFlow_007215b</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0twwyws</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_12m28pa" name="Data check" camunda:expression="true" camunda:resultVariable="true">
+      <bpmn:incoming>SequenceFlow_1gq94mz</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_007215b</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmn:message id="Message_1qbmvx6" name="Registration_confirmation" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -164,15 +157,15 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1gq94mz_di" bpmnElement="SequenceFlow_1gq94mz">
         <di:waypoint x="410" y="290" />
-        <di:waypoint x="470" y="290" />
+        <di:waypoint x="490" y="290" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_007215b_di" bpmnElement="SequenceFlow_007215b">
-        <di:waypoint x="570" y="290" />
-        <di:waypoint x="630" y="290" />
+        <di:waypoint x="590" y="290" />
+        <di:waypoint x="680" y="290" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0twwyws_di" bpmnElement="SequenceFlow_0twwyws">
-        <di:waypoint x="730" y="290" />
-        <di:waypoint x="792" y="290" />
+        <di:waypoint x="780" y="290" />
+        <di:waypoint x="895" y="290" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ExclusiveGateway_1ybyal0_di" bpmnElement="ExclusiveGateway_1ybyal0" isMarkerVisible="true">
         <dc:Bounds x="895" y="265" width="50" height="50" />
@@ -180,10 +173,6 @@
           <dc:Bounds x="885" y="241" width="70" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_0akeaz2_di" bpmnElement="SequenceFlow_0akeaz2">
-        <di:waypoint x="828" y="290" />
-        <di:waypoint x="895" y="290" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_12gm323_di" bpmnElement="SequenceFlow_12gm323">
         <di:waypoint x="920" y="315" />
         <di:waypoint x="920" y="530" />
@@ -263,23 +252,14 @@
       <bpmndi:BPMNShape id="UserTask_1v0c4qj_di" bpmnElement="Task_0cq36u0">
         <dc:Bounds x="870" y="530" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="IntermediateCatchEvent_0q993tw_di" bpmnElement="IntermediateThrowEvent_1b0r7e1">
-        <dc:Bounds x="792" y="272" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="765" y="315" width="90" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_1thy09w_di" bpmnElement="Task_12m28pa">
-        <dc:Bounds x="470" y="250" width="100" height="80" />
+        <dc:Bounds x="490" y="250" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_0m1ww3o_di" bpmnElement="Task_04eiu8n">
         <dc:Bounds x="1230" y="230" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_1sc7b9n_di" bpmnElement="Task_0od0g4e">
         <dc:Bounds x="1080" y="440" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="SendTask_1h4z57m_di" bpmnElement="Task_0dnu33j">
-        <dc:Bounds x="630" y="250" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="DataObjectReference_0ncorio_di" bpmnElement="user">
         <dc:Bounds x="422" y="175" width="36" height="50" />
@@ -291,6 +271,9 @@
         <di:waypoint x="387" y="250" />
         <di:waypoint x="420" y="200" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1sxz35r_di" bpmnElement="Task_0dnu33j">
+        <dc:Bounds x="680" y="250" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

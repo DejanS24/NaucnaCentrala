@@ -44,7 +44,8 @@
               <camunda:constraint name="required" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="naucne_oblasti" label="Naucne oblasti" type="enum" />
+          <camunda:formField id="naucne_oblasti" label="Naucne oblasti" type="enum">
+          </camunda:formField>
           <camunda:formField id="nacin_placanja" label="Nacin placanja" type="enum" />
         </camunda:formData>
         <camunda:taskListener delegateExpression="${scientificFieldsEnumHandler}" event="create" />

@@ -22,10 +22,10 @@ import { TokenInterceptorService } from './services/security/token-interceptor.s
 import { LoginGuardService } from './services/security/login-guard.service';
 import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
-import { SciWorkMagazineChoiceComponent } from './components/sci-work-magazine-choice/sci-work-magazine-choice.component';
 import { MagazinePaySubscriptionComponent } from './components/magazine-pay-subscription/magazine-pay-subscription.component';
 import { SciWorkCreationComponent } from './components/sci-work-creation/sci-work-creation.component';
 import { SciWorkCorrectionComponent } from './components/sci-work-correction/sci-work-correction.component';
+import { SciWorkReviewComponent } from './components/sci-work-review/sci-work-review.component';
 
 
 const ChildRoutes =
@@ -72,10 +72,10 @@ const Routes = [
     RegisterComponent,
     MagazineComponent,
     LoginComponent,
-    SciWorkMagazineChoiceComponent,
     MagazinePaySubscriptionComponent,
     SciWorkCreationComponent,
-    SciWorkCorrectionComponent
+    SciWorkCorrectionComponent,
+    SciWorkReviewComponent
   ],
   imports: [
     BrowserModule,
