@@ -66,6 +66,7 @@ public class ScientificWorkController {
 		System.out.println(pi.getId());
 		Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).list().get(0);
 		System.out.println(task.getAssignee());
+		runtimeService.setVariable(pi.getId(), "workAuthor", auth.getName());
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 		List<FormField> properties = tfd.getFormFields();	
         return new FormFieldsDto(task.getId(), pi.getId(), properties);
@@ -124,6 +125,7 @@ public class ScientificWorkController {
 		
 	}
 	
+	@GetMapping(value="/relevant")
 	public @ResponseBody FormFieldsDto workRelevantForm(@PathVariable("instanceId") String instanceId) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth!=null){
@@ -138,14 +140,39 @@ public class ScientificWorkController {
         return new FormFieldsDto(task.getId(), instanceId, properties);
 		
 	}
+	
+	@PostMapping(value="/relevant/{taskId}")
+	public ResponseEntity<String> isWorkRelevant(@RequestBody List<FormSubmissionDto> formData, @PathVariable("taskId") String taskId){
+		HashMap<String, Object> map = MapListToDTO.run(formData);
+		System.out.println(map);
+//		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+//		String processInstanceId = task.getProcessInstanceId();
+//		runtimeService.setVariable(processInstanceId, "relevant", (String)map.get("relevant"));
+		formService.submitTaskForm(taskId, map);
+		return new ResponseEntity<String>("Success", HttpStatus.OK);
+	}
 
+	@GetMapping(value="/pdf")
 	public @ResponseBody FormFieldsDto workPdfForm(@PathVariable("instanceId") String instanceId) {
 		Task task = taskService.createTaskQuery().processInstanceId(instanceId).list().get(0);
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 		List<FormField> properties = tfd.getFormFields();	
         return new FormFieldsDto(task.getId(), instanceId, properties);
 	}
+	
+	@PostMapping(value="/pdf/{taskId}")
+	public ResponseEntity<String> isWorkPdfGood(@RequestBody List<FormSubmissionDto> formData, @PathVariable("taskId") String taskId){
+		HashMap<String, Object> map = MapListToDTO.run(formData);
+		System.out.println(map);
+//		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+//		String processInstanceId = task.getProcessInstanceId();
+//		runtimeService.setVariable(processInstanceId, "relevant", (String)map.get("relevant"));
+		formService.submitTaskForm(taskId, map);
+		return new ResponseEntity<String>("Success", HttpStatus.OK);
+		
+	}
 
+	@GetMapping(value="/reject")
 	public @ResponseBody FormFieldsDto workRejectForm(@PathVariable("instanceId") String instanceId) {
 		Task task = taskService.createTaskQuery().processInstanceId(instanceId).list().get(0);
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
@@ -153,10 +180,75 @@ public class ScientificWorkController {
         return new FormFieldsDto(task.getId(), instanceId, properties);
 	}
 	
+	@PostMapping(value="/reject/{taskId}")
+	public ResponseEntity<String> rejectWork(@RequestBody List<FormSubmissionDto> formData, @PathVariable("taskId") String taskId){
+		HashMap<String, Object> map = MapListToDTO.run(formData);
+		System.out.println(map);
+//		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+//		String processInstanceId = task.getProcessInstanceId();
+//		runtimeService.setVariable(processInstanceId, "relevant", (String)map.get("relevant"));
+		formService.submitTaskForm(taskId, map);
+		return new ResponseEntity<String>("Success", HttpStatus.OK);
+		
+	}
+	
+	@GetMapping(value="/chooseReviewers")
 	public @ResponseBody FormFieldsDto chooseReviewersForm(@PathVariable("instanceId") String instanceId) {
 		Task task = taskService.createTaskQuery().processInstanceId(instanceId).list().get(0);
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 		List<FormField> properties = tfd.getFormFields();	
         return new FormFieldsDto(task.getId(), instanceId, properties);
+	}
+	
+	@PostMapping(value="/chooseReviewers/{taskId}")
+	public ResponseEntity<String> chooseReviewers(@RequestBody List<FormSubmissionDto> formData, @PathVariable("taskId") String taskId){
+		HashMap<String, Object> map = MapListToDTO.run(formData);
+		System.out.println(map);
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String processInstanceId = task.getProcessInstanceId();
+		runtimeService.setVariable(processInstanceId, "relevant", (String)map.get("relevant"));
+		formService.submitTaskForm(taskId, map);
+		return new ResponseEntity<String>("Success", HttpStatus.OK);
+		
+	}
+	
+	@GetMapping(value="/review")
+	public @ResponseBody FormFieldsDto reviewForm(@PathVariable("instanceId") String instanceId) {
+		Task task = taskService.createTaskQuery().processInstanceId(instanceId).list().get(0);
+		TaskFormData tfd = formService.getTaskFormData(task.getId());
+		List<FormField> properties = tfd.getFormFields();	
+        return new FormFieldsDto(task.getId(), instanceId, properties);
+	}
+	
+	@PostMapping(value="/review/{taskId}")
+	public ResponseEntity<String> submitReview(@RequestBody List<FormSubmissionDto> formData, @PathVariable("taskId") String taskId){
+		HashMap<String, Object> map = MapListToDTO.run(formData);
+		System.out.println(map);
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String processInstanceId = task.getProcessInstanceId();
+		runtimeService.setVariable(processInstanceId, "relevant", (String)map.get("relevant"));
+		formService.submitTaskForm(taskId, map);
+		return new ResponseEntity<String>("Success", HttpStatus.OK);
+		
+	}
+	
+	@GetMapping(value="/correction")
+	public @ResponseBody FormFieldsDto reviewCorrection(@PathVariable("instanceId") String instanceId) {
+		Task task = taskService.createTaskQuery().processInstanceId(instanceId).list().get(0);
+		TaskFormData tfd = formService.getTaskFormData(task.getId());
+		List<FormField> properties = tfd.getFormFields();	
+        return new FormFieldsDto(task.getId(), instanceId, properties);
+	}
+	
+	@PostMapping(value="/correction/{taskId}")
+	public ResponseEntity<String> submitCorrectedWork(@RequestBody List<FormSubmissionDto> formData, @PathVariable("taskId") String taskId){
+		HashMap<String, Object> map = MapListToDTO.run(formData);
+		System.out.println(map);
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String processInstanceId = task.getProcessInstanceId();
+		runtimeService.setVariable(processInstanceId, "relevant", (String)map.get("relevant"));
+		formService.submitTaskForm(taskId, map);
+		return new ResponseEntity<String>("Success", HttpStatus.OK);
+		
 	}
 }

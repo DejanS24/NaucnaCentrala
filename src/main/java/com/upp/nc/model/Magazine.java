@@ -27,40 +27,43 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 public class Magazine {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false, length=256)
-    private String name;
+	@Column(nullable = false, length = 256)
+	private String name;
 
-    @Column(nullable = false, length=256)
-    private String issnNumber;
-	
+	@Column(nullable = false, length = 256)
+	private String issnNumber;
+
 	@Column
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="magazine")
-    @JsonBackReference
-    private Collection<ScientificWork> scientificWorks;
-	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "magazine")
+	@JsonBackReference
+	private Collection<ScientificWork> scientificWorks;
+
 	@NotNull
 	@ElementCollection(targetClass = ScientificField.class)
 	@CollectionTable(name = "magazine_scientificField", joinColumns = @JoinColumn(name = "magazine_id"))
 	@Enumerated(EnumType.STRING)
 	@Column(name = "scientificField_id")
-    private List<ScientificField> scientificFields;
+	private List<ScientificField> scientificFields;
 
-    @Column(nullable = false)
-    private boolean isOpenAccess;
+	@Column(nullable = false)
+	private boolean isOpenAccess;
 
-    @OneToOne
-    private Editor chiefEditor;
+	@OneToOne
+	private Editor chiefEditor;
 
-    @Column
-    private HashMap<String, String> scientificFieldEditors;
+	@Column
+	private HashMap<String, String> scientificFieldEditors;
 
-    @Column
-    @ManyToMany
-    @JsonBackReference
-    private Collection<User> reviewers;
+	@Column
+	@ManyToMany
+	@JsonBackReference
+	private Collection<User> reviewers;
+
+	@Column
+	private String state;
 
 	public Long getId() {
 		return id;
@@ -134,5 +137,12 @@ public class Magazine {
 		this.reviewers = reviewers;
 	}
 
-    
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
 }
