@@ -15,10 +15,4 @@
   
     <input type="submit">
   </form>
-  <button (click)="getTasks()">Get tasks</button>
-  
-  <table>
-    <tr *ngFor="let task of tasks" > <td>{{task.name}}</td><td>{{task.assignee}}</td><td><button (click)="claim(task.taskId)">Claim</button></td> <td><button (click)="complete(task.taskId)">Complete</button></td></tr>
-  
-  </table>
-  </div>
+</div>

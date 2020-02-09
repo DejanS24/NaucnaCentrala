@@ -8,9 +8,8 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 
 import { RepositoryService } from './services/repository/repository.service';
-import { UserService } from './services/users/user.service';
+import { UserService } from './services/user.service';
 
-import { RegistrationComponent } from './registration/registration.component';
 
 import { MagazineComponent } from './components/magazine/magazine.component';
 import { MagazineService } from './services/magazine.service';
@@ -22,6 +21,11 @@ import { AuthenticationService } from './services/security/authentication.servic
 import { TokenInterceptorService } from './services/security/token-interceptor.service';
 import { LoginGuardService } from './services/security/login-guard.service';
 import { HomeComponent } from './components/home/home.component';
+import { RegisterComponent } from './components/register/register.component';
+import { SciWorkMagazineChoiceComponent } from './components/sci-work-magazine-choice/sci-work-magazine-choice.component';
+import { MagazinePaySubscriptionComponent } from './components/magazine-pay-subscription/magazine-pay-subscription.component';
+import { SciWorkCreationComponent } from './components/sci-work-creation/sci-work-creation.component';
+import { SciWorkCorrectionComponent } from './components/sci-work-correction/sci-work-correction.component';
 
 
 const ChildRoutes =
@@ -44,13 +48,18 @@ const Routes = [
     canActivate: [LoginGuardService]
   },
   {
-    path: "registrate",
-    component: RegistrationComponent,
+    path: "register",
+    component: RegisterComponent,
     canActivate: [LoginGuardService]
   },
   {
     path: "magazine",
     component: MagazineComponent,
+    data: { roles: ["Author"] },
+    canActivate: [AuthGuardService]
+  },{
+    path: "createSciWork",
+    component: SciWorkCreationComponent,
     data: { roles: ["Author"] },
     canActivate: [AuthGuardService]
   }
@@ -60,9 +69,13 @@ const Routes = [
   declarations: [
     AppComponent,
     HomeComponent,
-    RegistrationComponent,
+    RegisterComponent,
     MagazineComponent,
-    LoginComponent
+    LoginComponent,
+    SciWorkMagazineChoiceComponent,
+    MagazinePaySubscriptionComponent,
+    SciWorkCreationComponent,
+    SciWorkCorrectionComponent
   ],
   imports: [
     BrowserModule,

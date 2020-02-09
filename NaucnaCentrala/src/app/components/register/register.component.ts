@@ -1,79 +1,114 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import { UserService } from 'src/app/services/users/user.service';
-import { ProcessService } from 'src/app/services/process.service';
+import { Component, OnInit, Inject } from '@angular/core';
+import {UserService} from 'src/app/services/user.service';
+import { RepositoryService } from 'src/app/services/repository/repository.service';
 
 
 @Component({
   selector: 'app-registration',
-  templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.css']
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
 
-    private formFieldsDto = null;
-    private formFields = [];
-    private processInstanceId = '';
-    private enumValues = [];
-    private tasks = [];
-    private nextTask = '';
-    taskId = '';
+  private repeated_password = "";
+  private categories = [];
+  private formFieldsDto = null;
+  private formFields = [];
+  private choosen_category = -1;
+  private processInstance = "";
+  private enumValues = [];
+  private tasks = [];
 
-
-  constructor(private userService: UserService, private processService: ProcessService, private router: Router) {
-
-    const x = userService.fetchRegistrationForm();
+  constructor(private userService : UserService, private repositoryService : RepositoryService) {
+  // constructor(private userService : UserService, private repositoryService : RepositoryService) {
+    
+    let x = userService.fetchRegistrationForm();
 
     x.subscribe(
       res => {
-        // console.log(res);
-        // this.categories = res;
-        this.taskId = res.taskId;
-        // console.log('dobijeno je ' + res);
-        // console.log('id taska je: ' + this.taskId);
+        console.log(res);
+        //this.categories = res;
         this.formFieldsDto = res;
         this.formFields = res.formFields;
-        this.processInstanceId = res.processInstanceId;
-
+        this.processInstance = res.processInstanceId;
+        this.formFields.forEach( (field) =>{
+          
+          if( field.type.name=='enum'){
+            this.enumValues = Object.keys(field.type.values);
+          }
+        });
       },
       err => {
-        console.log('Error occured');
+        console.log("Error occured");
       }
     );
    }
-
-    getId() {
-    return this.processInstanceId;
-
-   }
-
 
   ngOnInit() {
   }
 
-  onSubmit(value, form) {
-    const o = new Array();
-    for (const property in value) {
-      // console.log(property);
-      // console.log(value[property]);
+  onSubmit(value, form){
+    let o = new Array();
+    for (var property in value) {
+      console.log(property);
+      console.log(value[property]);
       o.push({fieldId : property, fieldValue : value[property]});
     }
 
-    // console.log(o);
-    const x = this.userService.registerUser(o, this.formFieldsDto.taskId);
+    console.log(o);
+    let x = this.userService.registerUser(o, this.formFieldsDto.taskId);
 
     x.subscribe(
       res => {
-        // console.log(res);
-
-        alert('You registered successfully!');
-        this.router.navigate(['']);
+        console.log(res);
+        
+        alert("You registered successfully!")
       },
       err => {
-        console.log('Error occured');
-        alert('Value of field is empty or not valid!');
-
+        console.log("Error occured");
       }
     );
   }
+
+  getTasks(){
+    let x = this.repositoryService.getTasks(this.processInstance);
+
+    x.subscribe(
+      res => {
+        console.log(res);
+        this.tasks = res;
+      },
+      err => {
+        console.log("Error occured");
+      }
+    );
+   }
+
+   claim(taskId){
+    let x = this.repositoryService.claimTask(taskId);
+
+    x.subscribe(
+      res => {
+        console.log(res);
+      },
+      err => {
+        console.log("Error occured");
+      }
+    );
+   }
+
+   complete(taskId){
+    let x = this.repositoryService.completeTask(taskId);
+
+    x.subscribe(
+      res => {
+        console.log(res);
+        this.tasks = res;
+      },
+      err => {
+        console.log("Error occured");
+      }
+    );
+   }
+
 }
