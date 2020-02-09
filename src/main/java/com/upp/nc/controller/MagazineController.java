@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.upp.nc.dto.FormFieldsDto;
 import com.upp.nc.dto.FormSubmissionDto;
+import com.upp.nc.model.Magazine;
+import com.upp.nc.service.MagazineService;
 import com.upp.nc.util.MapListToDTO;
 
 @Controller
@@ -46,6 +48,9 @@ public class MagazineController {
 	@Autowired
 	FormService formService;
 	
+	@Autowired
+	private MagazineService magazineService;
+	
 	@GetMapping(path = "/getForm", produces = "application/json")
     public @ResponseBody FormFieldsDto getMagazineForm() {
 		//provera da li korisnik sa id-jem pera postoji
@@ -64,8 +69,7 @@ public class MagazineController {
 		System.out.println("Tuj smo");
 		System.out.println(map);
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		String processInstanceId = task.getProcessInstanceId();
-		runtimeService.setVariable(processInstanceId, "magazine", magazineData);
+		runtimeService.setVariable(task.getProcessInstanceId(), "magazine", magazineData);
 		formService.submitTaskForm(taskId, map);
 		return new ResponseEntity<String>("Success", HttpStatus.OK);
 		

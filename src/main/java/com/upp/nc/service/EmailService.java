@@ -23,6 +23,7 @@ import com.upp.nc.dto.UserDTO;
 import com.upp.nc.model.User;
 import com.upp.nc.repository.UserRepository;
 import com.upp.nc.util.EmailCfg;
+import com.upp.nc.util.EmailSender;
 
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -33,9 +34,6 @@ public class EmailService implements JavaDelegate {
 
 	@Autowired
 	IdentityService identityService;
-
-	@Value("${spring.mail.username}")
-	private String fromEmail;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -50,22 +48,18 @@ public class EmailService implements JavaDelegate {
 		List<FormSubmissionDto> registration = (List<FormSubmissionDto>)execution.getVariable("registration");
 		System.out.println(registration);
 //		User user = identityService.newUser("");
-		User user = new User();
         UserDTO dto = new UserDTO();
 
 		for (FormSubmissionDto formField : registration) {
 			if(formField.getFieldId().equals("username")) {
-				user.setUsername(formField.getFieldValue());
 				dto.setUsername(formField.getFieldValue());
 			}
 			if(formField.getFieldId().equals("password")) {
-				user.setPassword(formField.getFieldValue());
 				dto.setPassword(formField.getFieldValue());
 			}
-			if(formField.getFieldId().equals("email")) {
-				user.setEmail(formField.getFieldValue());
-			}
 		}
+		
+		User user = userRepository.findByUsername(dto.getUsername());
 //		identityService.saveUser(user);
 		Gson gson = new Gson();
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -76,33 +70,19 @@ public class EmailService implements JavaDelegate {
                 .setSubject(gson.toJson(dto))
                 .signWith(signatureAlgorithm, signingKey);
       
-		// Create a mail sender
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(emailCfg.getHost());
-        mailSender.setPort(emailCfg.getPort());
-        mailSender.setUsername(emailCfg.getUsername());
-        mailSender.setPassword(emailCfg.getPassword());
-        
-		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setTo(user.getEmail());
-		mail.setFrom("support@naucnacentrala.com");
-		mail.setSubject("Confirmation mail");
-		mail.setText("Hello, " + user.getName() + " thanks for singing up to our site, please click link to verify your email!"
-				+ "\nhttp://localhost:8070/user/confirm/"+builder.compact());
-		
-		mailSender.send(mail);
-		
 		String token = builder.compact();
+		
+		user.setToken(token);
+		userRepository.save(user);
+		
+		String subject = "Confirmation mail";
+		String message = "Hello, " + user.getName() + " thanks for singing up to our site, please click link to verify your email!"
+				+ "\nhttp://localhost:8070/user/confirm/"+token;
+		
+		EmailSender.send(emailCfg, user.getEmail(), subject, message);
+				
 		System.out.println("http://localhost:8070/user/confirm/"+token);
 		
-//		MimeMessage mail = javaMailSender.createMimeMessage();
-//        MimeMessageHelper messageHelper = new MimeMessageHelper(mail, true);
-//        messageHelper.setTo("dejans1224@gmail.com");
-//        messageHelper.setSubject("Confirmation mail");
-//        mail.setText("Hello, " + user.getName() + " thanks for singing up to our site, please click link to verify your email!"
-//				+ "\nhttp://localhost:8070/guest/confirm/"+token);
-//        javaMailSender.send(mail);
-
 		System.out.println("Email poslat!");
 	}
 

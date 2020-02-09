@@ -6,36 +6,48 @@
   <bpmn:process id="Magazine_creation" isExecutable="true">
     <bpmn:laneSet id="LaneSet_00ighwn">
       <bpmn:lane id="Lane_1xgv0es" name="Administrator">
-        <bpmn:flowNodeRef>check_data</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>EndEvent_1tvwlu2</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>activate</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>data_valid</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>activate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1tvwlu2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>check_data</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_0i7xoil" name="Editor">
-        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>magazine_create</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>set_inactive</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>editors_and_reviewers</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>fix_data</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>editors_and_reviewers</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>set_inactive</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>magazine_create</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
+    <bpmn:sequenceFlow id="SequenceFlow_023ykug" sourceRef="activate" targetRef="EndEvent_1tvwlu2" />
+    <bpmn:sequenceFlow id="SequenceFlow_1ozhzhj" sourceRef="editors_and_reviewers" targetRef="check_data" />
+    <bpmn:sequenceFlow id="SequenceFlow_01dttz6" sourceRef="set_inactive" targetRef="editors_and_reviewers" />
+    <bpmn:sequenceFlow id="SequenceFlow_1iqbtu1" sourceRef="magazine_create" targetRef="set_inactive" />
+    <bpmn:sequenceFlow id="SequenceFlow_1utx4j7" sourceRef="StartEvent_1" targetRef="magazine_create" />
+    <bpmn:sequenceFlow id="SequenceFlow_025s70p" sourceRef="fix_data" targetRef="activate" />
+    <bpmn:sequenceFlow id="SequenceFlow_1q43nl8" name="Yes" sourceRef="data_valid" targetRef="activate">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{valid}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_16e57a9" name="No" sourceRef="data_valid" targetRef="fix_data">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{not valid}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_07k4wt0" sourceRef="check_data" targetRef="data_valid" />
     <bpmn:startEvent id="StartEvent_1" name="Open magazine creation form" camunda:initiator="pokretac">
       <bpmn:outgoing>SequenceFlow_1utx4j7</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:userTask id="magazine_create" name="Fill magazine creation form" camunda:assignee="${pokretac}">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="naziv" label="Naziv" type="string" />
-          <camunda:formField id="naucne_oblasti" label="Naucne oblasti" type="enum">
-            <camunda:value id="fizika" name="Fizika" />
-            <camunda:value id="psihologija" name="Psihologija" />
-            <camunda:value id="hemija" name="Hemija" />
+          <camunda:formField id="naziv" label="Naziv" type="string">
+            <camunda:validation>
+              <camunda:constraint name="maxlength" config="25" />
+              <camunda:constraint name="required" />
+            </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="nacin_placanja" label="Nacin placanja" type="enum">
-            <camunda:value id="kes" name="Kes" />
-            <camunda:value id="kartica" name="Kartica" />
-          </camunda:formField>
+          <camunda:formField id="naucne_oblasti" label="Naucne oblasti" type="enum" />
+          <camunda:formField id="nacin_placanja" label="Nacin placanja" type="enum" />
         </camunda:formData>
+        <camunda:taskListener delegateExpression="${scientificFieldsEnumHandler}" event="create" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1utx4j7</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1iqbtu1</bpmn:outgoing>
@@ -43,7 +55,7 @@
         <bpmn:targetRef>DataObjectReference_14xrpe8</bpmn:targetRef>
       </bpmn:dataOutputAssociation>
     </bpmn:userTask>
-    <bpmn:serviceTask id="set_inactive" name="Set magazine to inactive" camunda:expression="true" camunda:resultVariable="true">
+    <bpmn:serviceTask id="set_inactive" name="Saving magazine as inactive" camunda:expression="true" camunda:resultVariable="true">
       <bpmn:incoming>SequenceFlow_1iqbtu1</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_01dttz6</bpmn:outgoing>
       <bpmn:dataOutputAssociation id="DataOutputAssociation_1xbw90b">
@@ -81,6 +93,7 @@
             <camunda:value id="rewiever3" name="Rewiever 3" />
           </camunda:formField>
         </camunda:formData>
+        <camunda:taskListener delegateExpression="${editorsAndReviewersEnumHandler}" event="create" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_01dttz6</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1ozhzhj</bpmn:outgoing>
@@ -114,24 +127,11 @@
       <bpmn:incoming>SequenceFlow_16e57a9</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_025s70p</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="SequenceFlow_023ykug" sourceRef="activate" targetRef="EndEvent_1tvwlu2" />
-    <bpmn:sequenceFlow id="SequenceFlow_1ozhzhj" sourceRef="editors_and_reviewers" targetRef="check_data" />
-    <bpmn:sequenceFlow id="SequenceFlow_01dttz6" sourceRef="set_inactive" targetRef="editors_and_reviewers" />
-    <bpmn:sequenceFlow id="SequenceFlow_1iqbtu1" sourceRef="magazine_create" targetRef="set_inactive" />
-    <bpmn:sequenceFlow id="SequenceFlow_1utx4j7" sourceRef="StartEvent_1" targetRef="magazine_create" />
-    <bpmn:sequenceFlow id="SequenceFlow_025s70p" sourceRef="fix_data" targetRef="activate" />
     <bpmn:exclusiveGateway id="data_valid" name="Data valid?">
       <bpmn:incoming>SequenceFlow_07k4wt0</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1q43nl8</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_16e57a9</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_1q43nl8" name="Yes" sourceRef="data_valid" targetRef="activate">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{valid}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_16e57a9" name="No" sourceRef="data_valid" targetRef="fix_data">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{not valid}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_07k4wt0" sourceRef="check_data" targetRef="data_valid" />
     <bpmn:dataStoreReference id="update_magazine" name="Save updated magazine" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">

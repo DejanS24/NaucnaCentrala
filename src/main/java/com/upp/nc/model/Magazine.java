@@ -62,4 +62,77 @@ public class Magazine {
     @JsonBackReference
     private Collection<User> reviewers;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getIssnNumber() {
+		return issnNumber;
+	}
+
+	public void setIssnNumber(String issnNumber) {
+		this.issnNumber = issnNumber;
+	}
+
+	public Collection<ScientificWork> getScientificWorks() {
+		return scientificWorks;
+	}
+
+	public void setScientificWorks(Collection<ScientificWork> scientificWorks) {
+		this.scientificWorks = scientificWorks;
+	}
+
+	public List<ScientificField> getScientificFields() {
+		return scientificFields;
+	}
+
+	public void setScientificFields(List<ScientificField> scientificFields) {
+		this.scientificFields = scientificFields;
+	}
+
+	public boolean isOpenAccess() {
+		return isOpenAccess;
+	}
+
+	public void setOpenAccess(boolean isOpenAccess) {
+		this.isOpenAccess = isOpenAccess;
+	}
+
+	public Editor getChiefEditor() {
+		return chiefEditor;
+	}
+
+	public void setChiefEditor(Editor chiefEditor) {
+		this.chiefEditor = chiefEditor;
+	}
+
+	public HashMap<String, String> getScientificFieldEditors() {
+		return scientificFieldEditors;
+	}
+
+	public void setScientificFieldEditors(HashMap<String, String> scientificFieldEditors) {
+		this.scientificFieldEditors = scientificFieldEditors;
+	}
+
+	public Collection<User> getReviewers() {
+		return reviewers;
+	}
+
+	public void setReviewers(Collection<User> reviewers) {
+		this.reviewers = reviewers;
+	}
+
+    
 }

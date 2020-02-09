@@ -45,4 +45,62 @@ public class ScientificWork {
 
     @Column
     private boolean isAccepted;
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public User getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(User author) {
+		this.author = author;
+	}
+
+	public String getKoautori() {
+		return koautori;
+	}
+
+	public void setKoautori(String koautori) {
+		this.koautori = koautori;
+	}
+
+	public String getWorkAbstract() {
+		return workAbstract;
+	}
+
+	public void setWorkAbstract(String workAbstract) {
+		this.workAbstract = workAbstract;
+	}
+
+	public ScientificField getScientificField() {
+		return scientificField;
+	}
+
+	public void setScientificField(ScientificField scientificField) {
+		this.scientificField = scientificField;
+	}
+
+	public Magazine getMagazine() {
+		return magazine;
+	}
+
+	public void setMagazine(Magazine magazine) {
+		this.magazine = magazine;
+	}
+
+	public boolean isAccepted() {
+		return isAccepted;
+	}
+
+	public void setAccepted(boolean isAccepted) {
+		this.isAccepted = isAccepted;
+	}
+    
+    
 }
