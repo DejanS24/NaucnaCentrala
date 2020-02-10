@@ -1,5 +1,6 @@
 package com.upp.nc.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.upp.nc.dto.FormFieldsDto;
 import com.upp.nc.dto.FormSubmissionDto;
+import com.upp.nc.dto.ReviewDTO;
 import com.upp.nc.model.Magazine;
 import com.upp.nc.model.User;
 import com.upp.nc.service.MagazineService;
@@ -224,7 +226,15 @@ public class ScientificWorkController {
 		System.out.println(map);
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		String processInstanceId = task.getProcessInstanceId();
-		runtimeService.setVariable(processInstanceId, "relevant", (String)map.get("relevant"));
+		ArrayList<ReviewDTO> reviews = (ArrayList<ReviewDTO>) runtimeService.getVariable(processInstanceId, "finishedReviews");
+		ReviewDTO rev = new ReviewDTO();
+		rev.setReview_pass((boolean)map.get("review_pass"));
+		rev.setAuthor_comments((String)map.get("author_comments"));
+		rev.setEditor_comments((String)map.get("editor_comments"));
+		
+		reviews.add(rev);
+		runtimeService.setVariable(processInstanceId, "finishedReviews", reviews);
+		
 		formService.submitTaskForm(taskId, map);
 		return new ResponseEntity<String>("Success", HttpStatus.OK);
 		
