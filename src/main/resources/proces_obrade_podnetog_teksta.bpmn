@@ -7,7 +7,6 @@
     <bpmn:laneSet id="LaneSet_1g8q4ff">
       <bpmn:lane id="Lane_0tkj268" name="Recenzent">
         <bpmn:flowNodeRef>Task_0vreo8p</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_1xy8grz</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>IntermediateThrowEvent_03m0he8</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_0ri2pvt" name="Urednik naucne oblasti">
@@ -145,10 +144,6 @@
       <bpmn:outgoing>SequenceFlow_0gq90h7</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1frv1jf</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="Task_1xy8grz" name="Slanje rada uredniku" camunda:class="com.upp.nc.service.SendReviewToEditorService">
-      <bpmn:incoming>SequenceFlow_03zkn0j</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0qmxev6</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:serviceTask id="Task_0h8wqwu" name="Slanje notifikacije autoru o potrebnoj doradi" camunda:class="com.upp.nc.service.NotifyAuthorAboutCorrectionService">
       <bpmn:incoming>SequenceFlow_0wgoxc1</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0fk9qhc</bpmn:outgoing>
@@ -308,7 +303,7 @@
           <camunda:formField id="rad_prihvacen" label="Rad prihvacen?" type="boolean" />
         </camunda:formData>
       </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_0qmxev6</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_03zkn0j</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0r8fohx</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="Task_1rer0cx" name="Obavljanje recenzije" camunda:assignee="${chosenEditor}">
@@ -373,8 +368,7 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{not rad_prihvacen}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0r8fohx" sourceRef="Task_0l2ijyu" targetRef="ExclusiveGateway_10589kw" />
-    <bpmn:sequenceFlow id="SequenceFlow_0qmxev6" sourceRef="Task_1xy8grz" targetRef="Task_0l2ijyu" />
-    <bpmn:sequenceFlow id="SequenceFlow_03zkn0j" sourceRef="Task_0vreo8p" targetRef="Task_1xy8grz" />
+    <bpmn:sequenceFlow id="SequenceFlow_03zkn0j" sourceRef="Task_0vreo8p" targetRef="Task_0l2ijyu" />
     <bpmn:sequenceFlow id="SequenceFlow_1gn35ij" sourceRef="ExclusiveGateway_0542wen" targetRef="Task_1ro56j6">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{prazna}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -701,17 +695,14 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_03zkn0j_di" bpmnElement="SequenceFlow_03zkn0j">
         <di:waypoint x="2928" y="1181" />
-        <di:waypoint x="2978" y="1181" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_1vo5iz4_di" bpmnElement="Task_0l2ijyu">
-        <dc:Bounds x="3058" y="921" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_0qmxev6_di" bpmnElement="SequenceFlow_0qmxev6">
-        <di:waypoint x="3028" y="1141" />
+        <di:waypoint x="3028" y="1181" />
         <di:waypoint x="3028" y="1041" />
         <di:waypoint x="3068" y="1041" />
         <di:waypoint x="3068" y="1001" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1vo5iz4_di" bpmnElement="Task_0l2ijyu">
+        <dc:Bounds x="3058" y="921" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_10589kw_di" bpmnElement="ExclusiveGateway_10589kw" isMarkerVisible="true">
         <dc:Bounds x="3213" y="866" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -743,9 +734,6 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_17rfrsd_di" bpmnElement="Task_06mk8rc">
         <dc:Bounds x="3958" y="961" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_04zmlvt_di" bpmnElement="Task_1xy8grz">
-        <dc:Bounds x="2978" y="1141" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0fk9qhc_di" bpmnElement="SequenceFlow_0fk9qhc">
         <di:waypoint x="3368" y="851" />
