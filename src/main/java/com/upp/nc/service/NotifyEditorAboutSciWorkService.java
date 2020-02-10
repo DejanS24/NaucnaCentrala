@@ -3,6 +3,7 @@ package com.upp.nc.service;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.upp.nc.model.Editor;
 import com.upp.nc.model.Magazine;
@@ -13,6 +14,7 @@ import com.upp.nc.repository.UserRepository;
 import com.upp.nc.util.EmailCfg;
 import com.upp.nc.util.EmailSender;
 
+@Service
 public class NotifyEditorAboutSciWorkService implements JavaDelegate {
 
 	@Autowired
@@ -30,10 +32,13 @@ public class NotifyEditorAboutSciWorkService implements JavaDelegate {
 		String sciField = (String) execution.getVariable("naucna_oblast");
 		System.out.println(sciField);
 
-		String magName = (String) execution.getVariable("casopis");
+		System.out.println(execution.getVariables());
+		String magName = (String) execution.getVariable("activeMagazine");
 		Magazine m = magazineRepository.findByName(magName);
-		String editorName = m.getScientificFieldEditors().get(sciField);
-	
+		String editorName = "";
+		if (m.getScientificFieldEditors() != null) {
+			editorName = m.getScientificFieldEditors().get(sciField);
+		}
 		Editor ed = (Editor) userRepository.findByUsername(editorName);
 		if (ed == null) {
 			execution.setVariable("urednik_postoji", false);

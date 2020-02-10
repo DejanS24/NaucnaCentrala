@@ -1,5 +1,7 @@
 package com.upp.nc.service;
 
+import java.util.HashMap;
+
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,10 @@ public class SetChiefEditorAsSciFieldEditorService implements JavaDelegate {
 		String sciField = (String) execution.getVariable("naucna_oblast");
 		System.out.println(sciField);
 
-		String magName = (String) execution.getVariable("casopis");
+		String magName = (String) execution.getVariable("activeMagazine");
 		Magazine m = magazineRepository.findByName(magName);
 	
+		if (m.getScientificFieldEditors() == null) m.setScientificFieldEditors(new HashMap<String, String>());
 		m.getScientificFieldEditors().put(sciField, m.getChiefEditor().getUsername());
 		magazineRepository.save(m);
 	}

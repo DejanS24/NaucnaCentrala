@@ -31,7 +31,7 @@ public class MagazineAccessHandler implements TaskListener {
 		Magazine m = magazineRepository.findByName(magName);
 		
 		exec.setVariable("open_access", m.isOpenAccess());
-		
+		exec.setVariable("activeMagazine", m.getName());
 		exec.setVariable("chiefEditor", m.getChiefEditor().getUsername());
 	}
 

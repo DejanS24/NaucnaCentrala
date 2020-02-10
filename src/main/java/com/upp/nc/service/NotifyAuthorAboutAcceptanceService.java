@@ -24,7 +24,7 @@ public class NotifyAuthorAboutAcceptanceService implements JavaDelegate {
 	public void execute(DelegateExecution execution) throws Exception {
 		String authorUsername = (String) execution.getVariable("workAuthor");
 		
-		User rev = (Reviewer) userRepository.findByUsername(authorUsername);
+		User rev = userRepository.findByUsername(authorUsername);
 		String to = rev.getEmail();
 		String subject = "Your work has been accepted";
 		String message = "Your scientific work has been reviewed and it is accepted to magazine.";

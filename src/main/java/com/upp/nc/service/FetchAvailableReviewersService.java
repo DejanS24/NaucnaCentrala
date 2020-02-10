@@ -20,7 +20,7 @@ public class FetchAvailableReviewersService implements JavaDelegate {
 
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
-		String magName = (String) execution.getVariable("casopis");
+		String magName = (String) execution.getVariable("activeMagazine");
 		Magazine m = magazineRepository.findByName(magName);
 		
 		List<String> reviewers = new ArrayList<String>();

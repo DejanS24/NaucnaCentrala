@@ -7,6 +7,7 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.upp.nc.dto.ReviewDTO;
 import com.upp.nc.model.Reviewer;
 import com.upp.nc.repository.UserRepository;
 import com.upp.nc.util.EmailCfg;
@@ -25,7 +26,7 @@ public class NotifyReviewersAboutSciWorkService implements JavaDelegate{
 	public void execute(DelegateExecution execution) throws Exception {
 		
 		ArrayList<String> reviewers = (ArrayList<String>) execution.getVariable("selectedReviewers");
-		System.out.println(execution.getVariable("casopis"));
+		System.out.println(execution.getVariable("activeMagazine"));
 		for (String reviewer : reviewers) {
 			Reviewer rev = (Reviewer) userRepository.findByUsername(reviewer);
 			String to = rev.getEmail();
@@ -33,6 +34,8 @@ public class NotifyReviewersAboutSciWorkService implements JavaDelegate{
 			String message = "Please review this scientific work for magazine.";
 			EmailSender.send(emailCfg, to, subject, message);
 		}
+		
+		execution.setVariable("finishedReviews", new ArrayList<ReviewDTO>());
 	}
 
 }

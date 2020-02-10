@@ -73,11 +73,6 @@
       <bpmn:incoming>SequenceFlow_09la9lr</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:serviceTask id="Task_1uy28x8" name="Priprema za pretrazivanje" camunda:expression="true=true" camunda:resultVariable="true">
-      <bpmn:extensionElements>
-        <camunda:executionListener event="start">
-          <camunda:script scriptFormat="Groovy">execution.setVariable("casopis_DOI", "1")</camunda:script>
-        </camunda:executionListener>
-      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_15cgodr</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_09la9lr</bpmn:outgoing>
     </bpmn:serviceTask>

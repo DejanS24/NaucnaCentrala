@@ -25,7 +25,7 @@ public class NotifyAuthorAboutRejectionService implements JavaDelegate {
 		String authorUsername = (String) execution.getVariable("workAuthor");
 		String reason = (String) execution.getVariable("obrazlozenje");
 		
-		User rev = (Reviewer) userRepository.findByUsername(authorUsername);
+		User rev = userRepository.findByUsername(authorUsername);
 		String to = rev.getEmail();
 		String subject = "Your work has been rejected";
 		String message = "Your scientific work has been reviewed and it is not accepted to magazine.";
