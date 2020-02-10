@@ -64,7 +64,7 @@ export class SciWorkEditorReviewComponent implements OnInit {
       console.log(property);
       console.log(value[property]);
 
-      if (property == "reviewersChoice") reviewerschoice = true;
+      if (property == "reviewersChoice" || property == "rad_prihvacen") reviewerschoice = true;
       // if (property == "reviewers"){
       //   for (let i in value[property]){
       //     value[property][i] = { "name" : value[property][i]};

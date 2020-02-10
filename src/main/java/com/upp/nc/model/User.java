@@ -45,6 +45,9 @@ public class User {
 
 	@Column
 	private String token;
+	
+	@Column
+	private boolean isAdmin;
 
 //	@NotNull
 	@ElementCollection(targetClass = ScientificField.class)
@@ -149,6 +152,7 @@ public class User {
 		this.state = state;
 		this.token = token;
 		this.scientificFields = scientificFields;
+		this.isAdmin = false;
 	}
 
 	public User() {

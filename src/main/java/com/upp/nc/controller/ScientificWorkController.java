@@ -229,13 +229,9 @@ public class ScientificWorkController {
 		System.out.println(map);
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		String processInstanceId = task.getProcessInstanceId();
-		ArrayList<ReviewDTO> reviews = (ArrayList<ReviewDTO>) runtimeService.getVariable(processInstanceId, "finishedReviews");
-		ReviewDTO rev = new ReviewDTO();
-		rev.setReview_pass(Boolean.getBoolean(((String)map.get("review_pass"))));
-		rev.setAuthor_comments((String)map.get("author_comments"));
-		rev.setEditor_comments((String)map.get("editor_comments"));
-		
-		reviews.add(rev);
+//		ArrayList<HashMap<String, Object>> reviews = (ArrayList<HashMap<String, Object>>) runtimeService.getVariable(processInstanceId, "finishedReviews");
+		ArrayList<HashMap<String, Object>> reviews = new ArrayList<>();
+		reviews.add(map);
 		runtimeService.setVariable(processInstanceId, "finishedReviews", reviews);
 		
 		formService.submitTaskForm(taskId, map);
