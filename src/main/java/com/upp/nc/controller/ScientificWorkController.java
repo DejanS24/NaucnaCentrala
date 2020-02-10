@@ -10,6 +10,7 @@ import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.form.FormField;
 import org.camunda.bpm.engine.form.TaskFormData;
+import org.camunda.bpm.engine.impl.util.json.JSONArray;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -189,9 +190,19 @@ public class ScientificWorkController {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		String processInstanceId = task.getProcessInstanceId();
 		
+		System.out.println(map.get("reviewersChoice"));
+		
 		ArrayList<String> reviewers = new ArrayList<String>();
+//		JSONArray jsonArray = (JSONArray)map.get("reviewersChoice"); 
+//		if (jsonArray != null) { 
+//		   int len = jsonArray.length();
+//		   for (int i=0;i<len;i++){ 
+//		    reviewers.add(jsonArray.get(i).toString());
+//		   } 
+//		} 
 		reviewers.add((String)map.get("reviewersChoice"));
 		runtimeService.setVariable(processInstanceId, "selectedReviewers", reviewers);
+		runtimeService.getVariables(processInstanceId);
 		formService.submitTaskForm(taskId, map);
 		return new ResponseEntity<String>("Success", HttpStatus.OK);
 		
@@ -199,7 +210,14 @@ public class ScientificWorkController {
 	
 	@GetMapping(value="/review/{instanceId}")
 	public @ResponseBody FormFieldsDto reviewForm(@PathVariable("instanceId") String instanceId) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth!=null){
+            identityService.setAuthenticatedUserId(auth.getName());
+        }
+        
 		Task task = taskService.createTaskQuery().processInstanceId(instanceId).list().get(0);
+
+		System.out.println(task.getAssignee());
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 		List<FormField> properties = tfd.getFormFields();	
         return new FormFieldsDto(task.getId(), instanceId, properties);
@@ -213,7 +231,7 @@ public class ScientificWorkController {
 		String processInstanceId = task.getProcessInstanceId();
 		ArrayList<ReviewDTO> reviews = (ArrayList<ReviewDTO>) runtimeService.getVariable(processInstanceId, "finishedReviews");
 		ReviewDTO rev = new ReviewDTO();
-		rev.setReview_pass((boolean)map.get("review_pass"));
+		rev.setReview_pass(Boolean.getBoolean(((String)map.get("review_pass"))));
 		rev.setAuthor_comments((String)map.get("author_comments"));
 		rev.setEditor_comments((String)map.get("editor_comments"));
 		

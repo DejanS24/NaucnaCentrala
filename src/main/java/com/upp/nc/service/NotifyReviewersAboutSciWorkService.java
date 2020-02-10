@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.upp.nc.dto.ReviewDTO;
-import com.upp.nc.model.Reviewer;
+import com.upp.nc.model.User;
 import com.upp.nc.repository.UserRepository;
 import com.upp.nc.util.EmailCfg;
 import com.upp.nc.util.EmailSender;
@@ -25,15 +25,22 @@ public class NotifyReviewersAboutSciWorkService implements JavaDelegate{
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		
-		ArrayList<String> reviewers = (ArrayList<String>) execution.getVariable("selectedReviewers");
-		System.out.println(execution.getVariable("activeMagazine"));
-		for (String reviewer : reviewers) {
-			Reviewer rev = (Reviewer) userRepository.findByUsername(reviewer);
-			String to = rev.getEmail();
-			String subject = "Review this scientific work";
-			String message = "Please review this scientific work for magazine.";
-			EmailSender.send(emailCfg, to, subject, message);
-		}
+//		ArrayList<String> reviewers = (ArrayList<String>) execution.getVariable("selectedReviewers");
+//		System.out.println(execution.getVariable("activeMagazine"));
+//		for (String reviewer : reviewers) {
+//			Reviewer rev = (Reviewer) userRepository.findByUsername(reviewer);
+//			String to = rev.getEmail();
+//			String subject = "Review this scientific work";
+//			String message = "Please review this scientific work for magazine.";
+//			EmailSender.send(emailCfg, to, subject, message);
+//		}
+		
+		User rev = userRepository.findByUsername((String)execution.getVariable("reviewersChoice"));
+		String to = rev.getEmail();
+		String subject = "Review this scientific work";
+		String message = "Please review this scientific work for magazine.\n"+ 
+				"http://localhost:4200/reviewWork/"+execution.getProcessInstance().getId();
+		EmailSender.send(emailCfg, to, subject, message);
 		
 		execution.setVariable("finishedReviews", new ArrayList<ReviewDTO>());
 	}

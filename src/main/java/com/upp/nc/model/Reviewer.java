@@ -1,6 +1,7 @@
 package com.upp.nc.model;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +24,17 @@ public class Reviewer extends User {
 	public Reviewer(User u) {
 		super(u);
 	}
+	
+	public Reviewer() {
+		super();
+	}
+
+	public Reviewer(String name, String surname, String email, String username, String password, String city,
+			String state, String token, List<ScientificField> scientificFields) {
+		super(name, surname, email, username, password, city, state, token, scientificFields);
+	}
+
+
 
 	public Collection<Magazine> getMagazines() {
 		return magazines;

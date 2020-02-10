@@ -37,5 +37,15 @@ export class ScientificWorkService {
     return this.httpClient.post("http://localhost:8070/work/editorStep/".concat(taskId), res) as Observable<any>;
   }
 
+  submitReviewChoice(res, taskId){
+    return this.httpClient.post("http://localhost:8070/work/chooseReviewers/".concat(taskId), res) as Observable<any>;
+  }
 
+  fetchReview(instanceId){
+    return this.httpClient.get("http://localhost:8070/work/review/".concat(instanceId)) as Observable<any>;
+  }
+
+  submitReview(rev, taskId){
+    return this.httpClient.post("http://localhost:8070/work/review/".concat(taskId), rev) as Observable<any>;
+  }
 }

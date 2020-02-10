@@ -15,6 +15,8 @@ export class SciWorkEditorReviewComponent implements OnInit {
   private processInstance = "";
   private enumValues = [];
   private tasks = [];
+  dropdownSettings = {};
+  selectedItems: any;
 
   constructor(private scientificWorkService: ScientificWorkService, private route: ActivatedRoute) {
     this.id = this.route.snapshot.paramMap.get('instanceId');
@@ -43,33 +45,65 @@ export class SciWorkEditorReviewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'item_id',
+      textField: 'item_text',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
   }
 
   onSubmit(value, form){
     console.log(value);
     let o = new Array();
+    let reviewerschoice = false;
     for (var property in value) {
       console.log(property);
       console.log(value[property]);
+
+      if (property == "reviewersChoice") reviewerschoice = true;
+      // if (property == "reviewers"){
+      //   for (let i in value[property]){
+      //     value[property][i] = { "name" : value[property][i]};
+      //   }
+      //   o.push({fieldId : property, fieldValue : value[property]});
+      // }else{
       o.push({fieldId : property, fieldValue : value[property]});
+      // }
     }
 
     console.log(o);
     let x;
-    x = this.scientificWorkService.submitEditorStep(o, this.formFieldsDto.taskId);
-    x.subscribe(
-      res => {
-        console.log("Uspesno prijavljeno");
-        console.log(res);
+    if (reviewerschoice){
+      x = this.scientificWorkService.submitReviewChoice(o, this.formFieldsDto.taskId);
+      x.subscribe(
+        res => {
+          console.log("Uspesno prijavljeno");
+          console.log(res);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }else{
+      x = this.scientificWorkService.submitEditorStep(o, this.formFieldsDto.taskId);
+      x.subscribe(
+        res => {
+          console.log("Uspesno prijavljeno");
+          console.log(res);
 
-        this.renderNextStep();
-      },
-      err => {
-        console.log(err);
+          this.renderNextStep();
+        },
+        err => {
+          console.log(err);
 
-        this.renderNextStep();
-      }
-    );
+          this.renderNextStep();
+        }
+      );
+    }
   }
 
   renderNextStep(){

@@ -11,6 +11,13 @@
               {{field.type.values[val]}}
             </option>
           </select>
+          <!-- <ng-multiselect-dropdown *ngIf="field.type.name=='enum'"
+            [data]="enumValues"
+            [(ngModel)]="selectedItems"
+            [settings]="dropdownSettings"
+            name={{field.id}}
+            >
+          </ng-multiselect-dropdown> -->
     </div>
   
     <input type="submit">

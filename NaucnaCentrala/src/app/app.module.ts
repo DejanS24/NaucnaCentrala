@@ -27,6 +27,7 @@ import { SciWorkCreationComponent } from './components/sci-work-creation/sci-wor
 import { SciWorkCorrectionComponent } from './components/sci-work-correction/sci-work-correction.component';
 import { SciWorkReviewComponent } from './components/sci-work-review/sci-work-review.component';
 import { SciWorkEditorReviewComponent } from './components/sci-work-editor-review/sci-work-editor-review.component';
+import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 
 
 const ChildRoutes =
@@ -69,6 +70,12 @@ const Routes = [
     component: SciWorkEditorReviewComponent,
     data: { roles: ["Editor"]},
     canActivate: [AuthGuardService]
+  },
+  {
+    path: "reviewWork/:instanceId",
+    component: SciWorkReviewComponent,
+    data: { roles: ["Reviewer"]},
+    canActivate: [AuthGuardService]
   }
 ]
 
@@ -89,7 +96,8 @@ const Routes = [
     BrowserModule,
     FormsModule,
     RouterModule.forRoot(Routes),
-    HttpClientModule, 
+    HttpClientModule,
+    NgMultiSelectDropDownModule.forRoot(),
     HttpModule
   ],
   
