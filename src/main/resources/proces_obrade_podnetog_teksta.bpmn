@@ -162,11 +162,6 @@
       <bpmn:outgoing>SequenceFlow_0j7vlgi</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="Task_07wj5qm" name="Slanje notifikacije uredniku naucne oblasti" camunda:class="com.upp.nc.service.NotifyEditorAboutSciWorkService">
-      <bpmn:extensionElements>
-        <camunda:executionListener event="start">
-          <camunda:script scriptFormat="Groovy">execution.setVariable("urednik_postoji", false)</camunda:script>
-        </camunda:executionListener>
-      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0hg3bth</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1mu3qgy</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -217,7 +212,7 @@
       <bpmn:outgoing>SequenceFlow_0cs9hsn</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_17xxngm</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Task_06xbbm8" name="Pregledanje unetih ispravki" camunda:assignee="demo">
+    <bpmn:userTask id="Task_06xbbm8" name="Pregledanje unetih ispravki" camunda:assignee="${chosenEditor}">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="rad_ispravan" label="Rad ispavan?" type="boolean" />
@@ -226,7 +221,7 @@
       <bpmn:incoming>SequenceFlow_1frv1jf</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1maodwq</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_0vreo8p" name="Obavljanje recenzije" camunda:assignee="demo">
+    <bpmn:userTask id="Task_0vreo8p" name="Obavljanje recenzije">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="review_pass" type="boolean" />
@@ -276,45 +271,13 @@
       <bpmn:incoming>SequenceFlow_01klwna</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1o1banp</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_17fhcdg" name="Izbor recenzenata" camunda:assignee="demo">
+    <bpmn:userTask id="Task_17fhcdg" name="Izbor recenzenata" camunda:assignee="${chosenEditor}">
       <bpmn:extensionElements>
-        <camunda:taskListener event="create">
-          <camunda:script scriptFormat="Groovy">taskFormData = task.getExecution().getProcessEngineServices().getFormService().getTaskFormData(task.getId());
-accountants = task.getExecution().getProcessEngineServices().getIdentityService().createUserQuery().memberOfGroup("allEmployees").list();
-
-formFields = taskFormData. getFormFields();
-if(formFields!=null){
-   for(field in formFields){
-       if( field.getId() == "selBox1" || field.getId() == "selBox2" ){
-           //ovo je nase select polje
-           items = field.getType().getValues();
-           for(user in accountants){
-               items.put(user.getId(),user.getFirstName()+" "+user.getLastName());
-           }
-       }
-   }
-}</camunda:script>
-        </camunda:taskListener>
         <camunda:formData>
           <camunda:formField id="selBox1" label="Prvi recenzent" type="enum" />
           <camunda:formField id="selBox2" label="Drugi recenzent" type="enum" />
         </camunda:formData>
-        <camunda:taskListener event="complete">
-          <camunda:script scriptFormat="Groovy">taskFormData = task.getExecution().getProcessEngineServices().getFormService().getTaskFormData(task.getId());
-userIds = new java.util.ArrayList();
-
-formFields = taskFormData. getFormFields();
-if(formFields!=null){
-   for(field in formFields){
-       if(field.getId() == "selBox1" || field.getId() == "selBox2"){
-           if(field.getValue()!="none")
-                userIds.add(field.getValue());
-       }
-   }
-}
-
-task.getExecution().setVariable("usersList", userIds);</camunda:script>
-        </camunda:taskListener>
+        <camunda:taskListener delegateExpression="${availableReviewersEnumHandler}" event="create" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1rlh0fp</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1buvrlc</bpmn:outgoing>
@@ -334,11 +297,6 @@ task.getExecution().setVariable("usersList", userIds);</camunda:script>
       <bpmn:outgoing>SequenceFlow_1gn35ij</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:serviceTask id="Task_0o32juk" name="Ponuda liste recenzenata uredniku" camunda:class="com.upp.nc.service.FetchAvailableReviewersService">
-      <bpmn:extensionElements>
-        <camunda:executionListener event="start">
-          <camunda:script scriptFormat="Groovy">execution.setVariable("prazna", true)</camunda:script>
-        </camunda:executionListener>
-      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1jc32hq</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0u1wk73</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_12ehtrp</bpmn:outgoing>
@@ -356,7 +314,7 @@ task.getExecution().setVariable("usersList", userIds);</camunda:script>
       <bpmn:incoming>SequenceFlow_0y97cgn</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_01klwna</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="Task_0ym46h5" name="Pregledanje PDF-a" camunda:assignee="demo">
+    <bpmn:userTask id="Task_0ym46h5" name="Pregledanje PDF-a" camunda:assignee="${chiefEditor}">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="pdf_formatiran" label="PDF dobro formatiran?" type="boolean" />
@@ -366,7 +324,7 @@ task.getExecution().setVariable("usersList", userIds);</camunda:script>
       <bpmn:incoming>SequenceFlow_1o1banp</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_143gq1c</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_0a529ni" name="Odbijanje rada uz obrazlozenje" camunda:assignee="demo">
+    <bpmn:userTask id="Task_0a529ni" name="Odbijanje rada uz obrazlozenje" camunda:assignee="${chiefEditor}">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="obrazlozenje" label="Obrazlozenje" type="string" />
@@ -375,7 +333,7 @@ task.getExecution().setVariable("usersList", userIds);</camunda:script>
       <bpmn:incoming>SequenceFlow_0d42g2x</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1u5s9lw</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_063de2a" name="Pregledanje rada autora" camunda:assignee="demo">
+    <bpmn:userTask id="Task_063de2a" name="Pregledanje rada autora" camunda:assignee="${chiefEditor}">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="relevant" label="Rad relevantan?" type="boolean" />
@@ -417,7 +375,7 @@ task.getExecution().setVariable("usersList", userIds);</camunda:script>
           <camunda:formField id="naucna_oblast" label="Naucna oblast" type="enum" />
         </camunda:formData>
         <camunda:taskListener expression="execution.setVariable(&#34;casopis_DOI&#34;, &#34;&#34;)" event="complete" />
-        <camunda:executionListener delegateExpression="${sciFieldsForMagazineEnumHandler}" event="start" />
+        <camunda:taskListener delegateExpression="${sciFieldsForMagazineEnumHandler}" event="create" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_14oi4u3</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_05x65hm</bpmn:incoming>
@@ -435,11 +393,6 @@ task.getExecution().setVariable("usersList", userIds);</camunda:script>
       <bpmn:outgoing>SequenceFlow_0d42g2x</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:exclusiveGateway id="ExclusiveGateway_1c0nb4d" name="Casopis open-access?">
-      <bpmn:extensionElements>
-        <camunda:properties>
-          <camunda:property name="open_access" value="true" />
-        </camunda:properties>
-      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_01uviab</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0z9bz5i</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_05x65hm</bpmn:outgoing>
@@ -447,9 +400,10 @@ task.getExecution().setVariable("usersList", userIds);</camunda:script>
     <bpmn:userTask id="Task_0kupcoo" name="Izbor casopisa" camunda:assignee="${pokretac}">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="casopis" label="Casopis" type="string" />
-          <camunda:formField id="open_access" label="Open access?" type="boolean" />
+          <camunda:formField id="casopis" label="Casopis" type="enum" />
         </camunda:formData>
+        <camunda:taskListener delegateExpression="${magazineAccessHandler}" event="complete" />
+        <camunda:taskListener delegateExpression="${magazinesEnumHandler}" event="create" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0h8319k</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_01uviab</bpmn:outgoing>
@@ -457,7 +411,7 @@ task.getExecution().setVariable("usersList", userIds);</camunda:script>
     <bpmn:startEvent id="StartEvent_1" camunda:initiator="pokretac">
       <bpmn:outgoing>SequenceFlow_0h8319k</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:userTask id="Task_0l2ijyu" name="Analiza ocene recenzenata" camunda:assignee="demo">
+    <bpmn:userTask id="Task_0l2ijyu" name="Analiza ocene recenzenata" camunda:assignee="${chosenEditor}">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="rad_prihvacen" label="Rad prihvacen?" type="boolean" />
@@ -468,7 +422,7 @@ task.getExecution().setVariable("usersList", userIds);</camunda:script>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_16euyjm" sourceRef="Task_1rer0cx" targetRef="ExclusiveGateway_10589kw" />
     <bpmn:sequenceFlow id="SequenceFlow_1r5lbjp" sourceRef="Task_1ro56j6" targetRef="Task_1rer0cx" />
-    <bpmn:userTask id="Task_1rer0cx" name="Obavljanje recenzije">
+    <bpmn:userTask id="Task_1rer0cx" name="Obavljanje recenzije" camunda:assignee="${chosenEditor}">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="review_pass" type="boolean" />

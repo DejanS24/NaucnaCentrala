@@ -9,24 +9,20 @@ import org.camunda.bpm.engine.form.FormField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.upp.nc.model.PaymentMethods;
-import com.upp.nc.model.ScientificField;
 import com.upp.nc.util.FormFieldsEnumLoader;
 
 @Service
-public class SciFieldsForMagazineEnumHandler implements TaskListener {
+public class AvailableReviewersEnumHandler implements TaskListener{
 
 	@Autowired
 	FormService formService;
-
+	
 	@Override
 	public void notify(DelegateTask delegateTask) {
-		System.out.println("Setting scientific fields enum");
-        List<FormField> formFieldList=formService.getTaskFormData(delegateTask.getId()).getFormFields();
-
-        
-        FormFieldsEnumLoader.fillValues(formFieldList, "naucna_oblast", ScientificField.getFields());
-        
+		List<String> availableRevs = (List<String>)delegateTask.getExecution().getVariable("availableReviewers");
+		List<FormField> formFieldList=formService.getTaskFormData(delegateTask.getId()).getFormFields();
+		
+		FormFieldsEnumLoader.fillValues(formFieldList, "reviewersChoice", availableRevs);
 	}
 
 }

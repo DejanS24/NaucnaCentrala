@@ -30,18 +30,19 @@ public class ScientificWorkService {
 		
 		ScientificWork sciWork = new ScientificWork();
 		sciWork.setTitle((String)sciWorkMap.get("naslov"));
-		sciWork.setWorkAbstract((String)sciWorkMap.get("tekst"));
+		sciWork.setKoautori((String)sciWorkMap.get("koautori"));
+		sciWork.setWorkAbstract((String)sciWorkMap.get("apstrakt"));
 		User user = userRepository.findByUsername(username);
 		sciWork.setAuthor(user);
 		scientificWorkRepository.save(sciWork);
 		return "Success";
 	}
 
-	public void notifyAboutWorkRequest(Magazine magazine, String author) {
+	public void notifyAboutWorkRequest(Magazine magazine, String author, String instanceId) {
 		
 		String subject = "New request for scientific work";
 		String message = "New scientific work has been created by user "+author+
-				". Please review the work. link";
+				". Please review the work. http://localhost:4200/reviewWorkEditor/"+instanceId;
 		
 		EmailSender.send(emailCfg, magazine.getChiefEditor().getEmail(), subject, message);
 		

@@ -11,7 +11,6 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -60,7 +59,7 @@ public class Magazine {
 	@Column
 	@ManyToMany
 	@JsonBackReference
-	private Collection<User> reviewers;
+	private Collection<Reviewer> reviewers;
 
 	@Column
 	private String state;
@@ -129,11 +128,11 @@ public class Magazine {
 		this.scientificFieldEditors = scientificFieldEditors;
 	}
 
-	public Collection<User> getReviewers() {
+	public Collection<Reviewer> getReviewers() {
 		return reviewers;
 	}
 
-	public void setReviewers(Collection<User> reviewers) {
+	public void setReviewers(Collection<Reviewer> reviewers) {
 		this.reviewers = reviewers;
 	}
 
