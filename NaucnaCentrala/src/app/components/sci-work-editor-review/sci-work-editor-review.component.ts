@@ -3,13 +3,12 @@ import { ScientificWorkService } from 'src/app/services/scientific-work.service'
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-sci-work-creation',
-  templateUrl: './sci-work-creation.component.html',
-  styleUrls: ['./sci-work-creation.component.css']
+  selector: 'app-sci-work-editor-review',
+  templateUrl: './sci-work-editor-review.component.html',
+  styleUrls: ['./sci-work-editor-review.component.css']
 })
-export class SciWorkCreationComponent implements OnInit {
-  private repeated_password = "";
-  private categories = [];
+export class SciWorkEditorReviewComponent implements OnInit {
+  id: any;
   private formFieldsDto = null;
   private formFields = [];
   private choosen_category = -1;
@@ -17,8 +16,11 @@ export class SciWorkCreationComponent implements OnInit {
   private enumValues = [];
   private tasks = [];
 
-  constructor(private scientificWorkService: ScientificWorkService) {
-    let x = scientificWorkService.fetchChooseMagazineForm();
+  constructor(private scientificWorkService: ScientificWorkService, private route: ActivatedRoute) {
+    this.id = this.route.snapshot.paramMap.get('instanceId');
+    console.log(this.id);
+
+    let x = scientificWorkService.fetchEditorStep(this.id);
 
     x.subscribe(
       res => {
@@ -54,38 +56,24 @@ export class SciWorkCreationComponent implements OnInit {
 
     console.log(o);
     let x;
-    if (o[0].fieldId == "naslov"){
-      x = this.scientificWorkService.submitSciWorkForm(o, this.formFieldsDto.taskId);
-      x.subscribe(
-        res => {
-          console.log("Uspesno prijavljeno");
-          console.log(res);
-        },
-        err => {
-          console.log(err);
-        }
-      );
-    }else{
-      x = this.scientificWorkService.confirmMagazineChoice(o, this.formFieldsDto.taskId);
-    
-      x.subscribe(
-        res => {
-          console.log(res);
+    x = this.scientificWorkService.submitEditorStep(o, this.formFieldsDto.taskId);
+    x.subscribe(
+      res => {
+        console.log("Uspesno prijavljeno");
+        console.log(res);
 
-          this.renderSciWorkForm();        
-        },
-        err => {
-          console.log(err);
-          console.log("Error occured");
+        this.renderNextStep();
+      },
+      err => {
+        console.log(err);
 
-          this.renderSciWorkForm();        
-        }
-      );
-    }
+        this.renderNextStep();
+      }
+    );
   }
 
-  renderSciWorkForm(){
-    let x = this.scientificWorkService.fetchSciWorkForm(this.formFieldsDto.processInstanceId);
+  renderNextStep(){
+    let x = this.scientificWorkService.fetchEditorStep(this.formFieldsDto.processInstanceId);
 
     x.subscribe(
       res => {

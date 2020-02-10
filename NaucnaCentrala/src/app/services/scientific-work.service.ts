@@ -28,4 +28,14 @@ export class ScientificWorkService {
   submitSciWorkForm(sciWork, taskId) {
     return this.httpClient.post("http://localhost:8070/work/submit/".concat(taskId), sciWork) as Observable<any>;
   }
+
+  fetchEditorStep(instanceId){
+    return this.httpClient.get("http://localhost:8070/work/editorStep/".concat(instanceId)) as Observable<any>;
+  }
+
+  submitEditorStep(res, taskId){
+    return this.httpClient.post("http://localhost:8070/work/editorStep/".concat(taskId), res) as Observable<any>;
+  }
+
+
 }

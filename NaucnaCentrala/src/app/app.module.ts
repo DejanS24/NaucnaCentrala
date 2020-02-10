@@ -26,6 +26,7 @@ import { MagazinePaySubscriptionComponent } from './components/magazine-pay-subs
 import { SciWorkCreationComponent } from './components/sci-work-creation/sci-work-creation.component';
 import { SciWorkCorrectionComponent } from './components/sci-work-correction/sci-work-correction.component';
 import { SciWorkReviewComponent } from './components/sci-work-review/sci-work-review.component';
+import { SciWorkEditorReviewComponent } from './components/sci-work-editor-review/sci-work-editor-review.component';
 
 
 const ChildRoutes =
@@ -62,6 +63,12 @@ const Routes = [
     component: SciWorkCreationComponent,
     data: { roles: ["Author"] },
     canActivate: [AuthGuardService]
+  },
+  {
+    path: "reviewWorkEditor/:instanceId",
+    component: SciWorkEditorReviewComponent,
+    data: { roles: ["Editor"]},
+    canActivate: [AuthGuardService]
   }
 ]
 
@@ -75,7 +82,8 @@ const Routes = [
     MagazinePaySubscriptionComponent,
     SciWorkCreationComponent,
     SciWorkCorrectionComponent,
-    SciWorkReviewComponent
+    SciWorkReviewComponent,
+    SciWorkEditorReviewComponent
   ],
   imports: [
     BrowserModule,
