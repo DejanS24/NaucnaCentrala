@@ -18,4 +18,8 @@ export class MagazineService {
   createMagazine(user, taskId) {
     return this.httpClient.post("http://localhost:8070/magazine/fillForm/".concat(taskId), user) as Observable<any>;
   }
+
+  getAllMagazines(){
+    return this.httpClient.get("http://localhost:8070/magazine/all") as Observable<any>;
+  }
 }

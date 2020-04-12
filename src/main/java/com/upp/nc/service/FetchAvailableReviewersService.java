@@ -24,9 +24,9 @@ public class FetchAvailableReviewersService implements JavaDelegate {
 		Magazine m = magazineRepository.findByName(magName);
 		
 		List<String> reviewers = new ArrayList<String>();
-		for (Reviewer r : m.getReviewers()) {
-			reviewers.add(r.getUsername());
-		}
+//		for (Reviewer r : m.getReviewers()) {
+//			reviewers.add(r.getUsername());
+//		}
 		execution.setVariable("availableReviewers", reviewers);
 		execution.setVariable("prazna", reviewers.isEmpty());
 		

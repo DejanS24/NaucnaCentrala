@@ -1,0 +1,7 @@
+<div *ngIf="magazines.length == 0">
+  No magazines available.
+</div>
+<div *ngFor="let magazine of magazines" >
+  <span>{{magazine.name}}</span>
+  <button (click)="handlePayClick(magazine.id)" >Pay</button>
+</div>

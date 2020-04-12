@@ -31,7 +31,7 @@ export class RepositoryService {
   }
 
   claimTask(taskId){
-    return this.httpClient.post('http://localhost:8070/welcome/tasks/claim/'.concat(taskId), null) as Observable<any>
+    return this.httpClient.post('http://localhost:8070/user/tasks/claim/'.concat(taskId), null) as Observable<any>
   }
 
   completeTask(taskId){

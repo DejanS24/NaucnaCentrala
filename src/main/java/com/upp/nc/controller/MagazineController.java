@@ -51,6 +51,22 @@ public class MagazineController {
 	@Autowired
 	private MagazineService magazineService;
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@GetMapping(path = "/all", produces = "application/json")
+	public ResponseEntity<List<Magazine>> getMagazines() {
+		List<Magazine> magazines = magazineService.getAllMagazines();
+		if (magazines.isEmpty()) return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<Magazine>>(magazines, HttpStatus.OK);
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@GetMapping(path = "/{magazineId}", produces = "application/json")
+	public ResponseEntity<Magazine> getMagazine(@PathVariable("magazineId") Long magazineId){
+		Magazine magazine = magazineService.getMagazine(magazineId);
+		if (magazine == null) return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Magazine>(magazine, HttpStatus.OK);
+	}
+	
 	@GetMapping(path = "/getForm", produces = "application/json")
     public @ResponseBody FormFieldsDto getMagazineForm() {
 		//provera da li korisnik sa id-jem pera postoji

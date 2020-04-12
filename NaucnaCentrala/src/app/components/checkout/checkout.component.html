@@ -1,0 +1,25 @@
+<!-- <div>
+  <form class="form" #f="ngForm" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate>  
+    <select name="field.id">
+      <option *ngFor="let val of enumValues" value={{val}}>
+        {{val}}
+      </option>
+    </select>
+    
+    <input type="submit">
+  </form>
+</div> -->
+
+<div>
+  <p>Checkout</p>
+  <p>{{magazine}}</p>
+  <p>Price: {{price}}</p>
+</div>
+
+<div *ngFor="let payment of paymentMethods" >
+  <div style="background-color: aquamarine;">
+    <p>{{payment}}</p>
+    <button (click)="handlePayment(payment)" >Pay</button>
+  </div>
+  <br>
+</div>

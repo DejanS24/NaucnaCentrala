@@ -18,28 +18,28 @@ public class Editor extends User {
 //	@JsonBackReference
 //	private Magazine magazine;
 	
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Magazine magazine;
+//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private Magazine magazine;
 
-	@Column
-	@OneToMany
-	private Collection<ScientificWork> scientificWorks;
+//	@Column
+//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "editor_id")
+//	private Collection<ScientificWork> scientificWorks;
 
-	public Magazine getMagazine() {
-		return magazine;
-	}
+//	public Magazine getMagazine() {
+//		return magazine;
+//	}
+//
+//	public void setMagazine(Magazine magazine) {
+//		this.magazine = magazine;
+//	}
 
-	public void setMagazine(Magazine magazine) {
-		this.magazine = magazine;
-	}
-
-	public Collection<ScientificWork> getScientificWorks() {
-		return scientificWorks;
-	}
-
-	public void setScientificWorks(Collection<ScientificWork> scientificWorks) {
-		this.scientificWorks = scientificWorks;
-	}
+//	public Collection<ScientificWork> getScientificWorks() {
+//		return scientificWorks;
+//	}
+//
+//	public void setScientificWorks(Collection<ScientificWork> scientificWorks) {
+//		this.scientificWorks = scientificWorks;
+//	}
 
 	@Override
 	public String getUserAuthorities() {

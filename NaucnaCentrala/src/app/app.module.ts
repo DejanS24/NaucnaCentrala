@@ -4,14 +4,10 @@ import { FormsModule }   from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
-
 import { AppComponent } from './app.component';
-
 import { RepositoryService } from './services/repository/repository.service';
 import { UserService } from './services/user.service';
-
-
-import { MagazineComponent } from './components/magazine/magazine.component';
+import { MagazineCreationComponent } from './components/magazine-creation/magazine-creation.component';
 import { MagazineService } from './services/magazine.service';
 import { from } from 'rxjs';
 import { LoginComponent } from './components/login/login.component';
@@ -28,6 +24,12 @@ import { SciWorkCorrectionComponent } from './components/sci-work-correction/sci
 import { SciWorkReviewComponent } from './components/sci-work-review/sci-work-review.component';
 import { SciWorkEditorReviewComponent } from './components/sci-work-editor-review/sci-work-editor-review.component';
 import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
+import { CheckoutComponent } from './components/checkout/checkout.component';
+import { CheckoutService } from './services/checkout.service';
+import { ShowMagazineComponent } from './components/show-magazine/show-magazine.component';
+import { SuccessComponent } from './components/payment/success/success.component';
+import { FailComponent } from './components/payment/fail/fail.component';
+import { ErrorComponent } from './components/payment/error/error.component';
 
 
 const ChildRoutes =
@@ -50,13 +52,20 @@ const Routes = [
     canActivate: [LoginGuardService]
   },
   {
+    path: "checkout",
+    component: CheckoutComponent
+  },
+  {
     path: "register",
     component: RegisterComponent,
     canActivate: [LoginGuardService]
-  },
+  },{
+    path: "showMagazine",
+    component: ShowMagazineComponent
+  },  
   {
     path: "magazine",
-    component: MagazineComponent,
+    component: MagazineCreationComponent,
     data: { roles: ["Author"] },
     canActivate: [AuthGuardService]
   },{
@@ -76,6 +85,18 @@ const Routes = [
     component: SciWorkReviewComponent,
     data: { roles: ["Reviewer"]},
     canActivate: [AuthGuardService]
+  },
+  {
+    path: "payment/success/:paymentId",
+    component: SuccessComponent
+  },
+  {
+    path: "payment/fail/:paymentId",
+    component: FailComponent
+  },
+  {
+    path: "payment/error/:paymentId",
+    component: ErrorComponent
   }
 ]
 
@@ -84,13 +105,18 @@ const Routes = [
     AppComponent,
     HomeComponent,
     RegisterComponent,
-    MagazineComponent,
+    MagazineCreationComponent,
     LoginComponent,
     MagazinePaySubscriptionComponent,
     SciWorkCreationComponent,
     SciWorkCorrectionComponent,
     SciWorkReviewComponent,
-    SciWorkEditorReviewComponent
+    SciWorkEditorReviewComponent,
+    CheckoutComponent,
+    ShowMagazineComponent,
+    SuccessComponent,
+    FailComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

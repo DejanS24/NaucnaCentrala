@@ -6,10 +6,10 @@ import { ProcessService } from 'src/app/services/process.service';
 
 @Component({
   selector: 'app-magazine',
-  templateUrl: './magazine.component.html',
-  styleUrls: ['./magazine.component.css']
+  templateUrl: './magazine-creation.component.html',
+  styleUrls: ['./magazine-creation.component.css']
 })
-export class MagazineComponent implements OnInit {
+export class MagazineCreationComponent implements OnInit {
   private formFieldsDto = null;
     private formFields = [];
     private processInstanceId = '';

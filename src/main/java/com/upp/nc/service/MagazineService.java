@@ -20,6 +20,11 @@ public class MagazineService {
 		return m;
 	}
 	
+	public Magazine getMagazine(Long id) {
+		Magazine m = magazineRepository.findById(id).get();
+		return m;
+	}
+	
 	public List<Magazine> getAllMagazines(){
 		return magazineRepository.findAll();
 	}

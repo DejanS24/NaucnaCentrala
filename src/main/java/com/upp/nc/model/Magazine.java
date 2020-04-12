@@ -11,10 +11,12 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -35,31 +37,34 @@ public class Magazine {
 	@Column(nullable = false, length = 256)
 	private String issnNumber;
 
-	@Column
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "magazine")
-	@JsonBackReference
-	private Collection<ScientificWork> scientificWorks;
+//	@Column
+//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "magazine")
+////	@JsonBackReference
+//	private Collection<ScientificWork> scientificWorks;
 
-	@NotNull
-	@ElementCollection(targetClass = ScientificField.class)
-	@CollectionTable(name = "magazine_scientificField", joinColumns = @JoinColumn(name = "magazine_id"))
-	@Enumerated(EnumType.STRING)
-	@Column(name = "scientificField_id")
-	private List<ScientificField> scientificFields;
+//	@NotNull
+//	@ElementCollection(targetClass = ScientificField.class)
+//	@CollectionTable(name = "magazine_scientificField", joinColumns = @JoinColumn(name = "magazine_id"))
+//	@Enumerated(EnumType.STRING)
+//	@Column(name = "scientificField_id")
+//	private List<ScientificField> scientificFields;
 
 	@Column(nullable = false)
 	private boolean isOpenAccess;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Editor chiefEditor;
 
 	@Column
 	private HashMap<String, String> scientificFieldEditors;
 
-	@Column
-	@ManyToMany
-	@JsonBackReference
-	private Collection<Reviewer> reviewers;
+//	@Column
+//	@ManyToMany(fetch = FetchType.LAZY)
+//	@JoinTable(name = "magazine_reviewers",
+//    joinColumns = @JoinColumn(name = "magazine_id", referencedColumnName = "id"),
+//    inverseJoinColumns = @JoinColumn(name = "reviewer_id", referencedColumnName = "id"))
+////	@JsonBackReference
+//	private Collection<Reviewer> reviewers;
 
 	@Column
 	private String state;
@@ -88,21 +93,21 @@ public class Magazine {
 		this.issnNumber = issnNumber;
 	}
 
-	public Collection<ScientificWork> getScientificWorks() {
-		return scientificWorks;
-	}
-
-	public void setScientificWorks(Collection<ScientificWork> scientificWorks) {
-		this.scientificWorks = scientificWorks;
-	}
-
-	public List<ScientificField> getScientificFields() {
-		return scientificFields;
-	}
-
-	public void setScientificFields(List<ScientificField> scientificFields) {
-		this.scientificFields = scientificFields;
-	}
+//	public Collection<ScientificWork> getScientificWorks() {
+//		return scientificWorks;
+//	}
+//
+//	public void setScientificWorks(Collection<ScientificWork> scientificWorks) {
+//		this.scientificWorks = scientificWorks;
+//	}
+//
+//	public List<ScientificField> getScientificFields() {
+//		return scientificFields;
+//	}
+//
+//	public void setScientificFields(List<ScientificField> scientificFields) {
+//		this.scientificFields = scientificFields;
+//	}
 
 	public boolean isOpenAccess() {
 		return isOpenAccess;
@@ -128,13 +133,13 @@ public class Magazine {
 		this.scientificFieldEditors = scientificFieldEditors;
 	}
 
-	public Collection<Reviewer> getReviewers() {
-		return reviewers;
-	}
-
-	public void setReviewers(Collection<Reviewer> reviewers) {
-		this.reviewers = reviewers;
-	}
+//	public Collection<Reviewer> getReviewers() {
+//		return reviewers;
+//	}
+//
+//	public void setReviewers(Collection<Reviewer> reviewers) {
+//		this.reviewers = reviewers;
+//	}
 
 	public String getState() {
 		return state;
